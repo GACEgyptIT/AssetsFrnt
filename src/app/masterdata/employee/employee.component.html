@@ -529,13 +529,13 @@
                                                       <div id="toPrint" class="toPrint" hidden>
  
                                                         <!-- <img width="100px" alt="Logo" src="data:image/jpeg;base64,{{logo}}"> -->
-                                                        <img width="80px" alt="Logo" src="../../../assets/img/Logo.jpg">
+                                                        <img width="80px" alt="Logo" src="../../../assets/img/{{printData.company}}-Logo.jpg">                                                        
                                                         <br><br>
-                                                  
+                                                        
                                                         <h4>Responsibility Statement</h4>
                                                         <br>
                                                         <div class="print-content" *ngIf="printData">
-                                                          I hereunder confirm and testify that while working for <strong>GAC</strong> in the capacity of
+                                                          I hereunder confirm and testify that while working for <strong>{{printData.company}}</strong> in the capacity of
                                                           <span class="bold"> ( {{ printData.jobTitle }} )</span>
                                                           I received the following equipment and/or in possession of the following facilities:
                                                           <br><br>
