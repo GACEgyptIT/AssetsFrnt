@@ -1,0 +1,75 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="domainForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Domain ID: {{ getDomainForm.domId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Domain Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Domain Name" formControlName="domName"  class="form-control" >
+                                <small [hidden]="domainForm.controls.domName.valid || domainForm.controls.domName.pristine" class="text-danger">
+                                      Domain Name is required.
+                                </small>
+                              </div>
+                       
+                            </div>
+                            <div class="footer">
+                        
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette"  *ngIf="getDomainForm.domId.value == 0" [disabled]="domainForm.status == 'INVALID' "> Add </button> <!--  [disabled]="domainForm.status == 'INVALID' " -->
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette"  *ngIf="getDomainForm.domId.value > 0" [disabled]="domainForm.status == 'INVALID' "> Save </button> <!--*ngIf="getDomainForm.domId.value > 0" [disabled]="domainForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+          
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Domains List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Domain Name 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Domains">
+                                <td>{{ row?.domId }}</td>
+                                <td>{{ row?.domName }}</td>
+                                <td>
+                                  <a (click)="onEditDomain(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteDomain(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>
+

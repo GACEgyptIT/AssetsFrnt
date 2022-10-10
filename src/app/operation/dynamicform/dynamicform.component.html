@@ -1,0 +1,33 @@
+<div class="main-content">
+    <button (click)="addNewEmail()">Add new Individual Email</button><br><br>
+    <form [formGroup]="myForm">
+      <div formArrayName="emails">
+          
+        <div *ngFor="let eml of myForm.get('emails'); let i=index">
+        <fieldset>
+          <legend><h3>Individual {{i+1}}: </h3></legend>
+          <div [formGroupName]="i">
+            <label>Email Title: </label>
+            <input formControlName="individualEmailsTitle" /><span><button (click)="deleteEmail(i)">Delete Email</button></span>
+            <div formArrayName="individualEmailsAddress">
+              <div *ngFor="let esddre of eml.get('individualEmailsAddress').controls; let j=index">
+                <fieldset>
+                <legend><h4>ADDRESS {{j+1}}</h4></legend>
+                <div [formGroupName]="j">
+                  <label>Address Name:</label>
+                  <input formControlName="emailAddress" /><span><button (click)="deleteIndvAddress(eml.controls.individualEmailsAddress, j)">Delete Email</button></span>
+                </div>
+                </fieldset>
+              </div>
+              <button (click)="addNewIndvAddress(eml.controls.individualEmailsAddress)">Add new Address</button>
+            </div>
+          </div>
+        </fieldset>
+        </div>
+      </div><br>
+      
+    </form>
+  
+    <pre>{{myForm.value | json}}</pre>
+</div>
+

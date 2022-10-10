@@ -1,0 +1,79 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="storeForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Store ID: {{ getStoreForm.StoreId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Store Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Store Name" formControlName="strName"  class="form-control" >
+                                <small [hidden]="storeForm.controls.strName.valid || storeForm.controls.strName.pristine" class="text-danger">
+                                      Store Name is required.
+                                </small>
+                              </div>
+               
+                            </div>
+                            <div class="footer">
+                        
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette"  *ngIf="getStoreForm.StoreId.value == 0" [disabled]="storeForm.status == 'INVALID' "> Add </button> <!--  [disabled]="storeForm.status == 'INVALID' " -->
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette"  *ngIf="getStoreForm.StoreId.value > 0" [disabled]="storeForm.status == 'INVALID' "> Save </button> <!--*ngIf="getStoreForm.brnId.value > 0" [disabled]="storeForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+          
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">stores List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Store Name 
+                                </th>
+                                <th>
+                                  Code
+                                </th>
+                        
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Stores">
+                                <td>{{ row?.StoreId }}</td>
+                                <td>{{ row?.strName }}</td>
+                                <td>                               </td>
+                                <td>
+                                  <a (click)="onEditStore(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteStore(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

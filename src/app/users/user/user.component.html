@@ -1,0 +1,234 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row">
+          <form [formGroup]="userForm" (ngSubmit)="onSubmit()" >
+            <div class="col-md-1">
+              <div class="form-group col-md-1">
+                <div class="card card-user">
+                                  <img [src]="getEmpImg.value || '../../../assets/img/profile/ProfilePhoto.png'" [width]="110" [height]="140" class="img-rounded" >
+                                  <br>
+                                  <input id="custom-input" type="file" (change)="fileChangeListener($event)">
+                </div>
+          </div>
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+        <div class="card card-plain">
+                    <div class="content">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="control-label" for="">Account Name (Login Name):   <span class="star">*</span>     </label>
+                                <input type="text" placeholder="First.Last" class="form-control" formControlName="accountName" required>
+                                <small [hidden]="userForm.controls.accountName.valid || userForm.controls.accountName.pristine" class="text-danger">
+                                  Account Name is required.
+                                </small>
+                            </div>
+                                <label class="control-label" for="">Full Name:  <span class="star">*</span> </label>
+                                <input type="text" placeholder="User Full Name" class="form-control" formControlName="empFullName" required>
+                                <small [hidden]="userForm.controls.empFullName.valid || userForm.controls.empFullName.pristine" class="text-danger">
+                                  Full Name is required.
+                                </small>
+                            </div>
+                            <div class="form-group">
+                              <label> Select Roles </label>
+                              <ng-multiselect-dropdown #multiSelect
+                                  [placeholder]="'Enter Role Name'" 
+                                  [data]="Roles" 
+                                  [formControl]="getUserForm.roleName" 
+                                  [settings]="settings"
+                                  [disabled]="false"
+                                  (onFilterChange)="onFilterChange($event)"
+                                  (onDropDownClose)="onDropDownClose($event)"
+                                  (onSelect)="onItemSelect($event)" 
+                                  (onDeSelect)="onDeSelect($event)"
+                                  (onSelectAll)="onSelectAllRoles($event)"
+                                  (onDeSelectAll)="onDeSelectAll($event)"  >
+                              </ng-multiselect-dropdown>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-md-4 col-md-offset-s1">
+                    <div class="card card-plain">
+                        <div class="content">
+                            <div class="form-group">
+                              <label class="control-label" for="">Password:   </label>
+                              <input type="password" placeholder="Password" class="form-control" formControlName="usrPassword">
+                              <small [hidden]="userForm.controls.usrPassword.valid || userForm.controls.usrPassword.pristine" class="text-danger">
+                                Password length 8 required.
+                              </small>
+
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label" for="">Confirm Password:   </label>
+                              <input type="password" placeholder="Confirm Password" class="form-control" formControlName="confirmUsrPassword" >  
+                              <small [hidden]="userForm.controls.confirmUsrPassword.valid || userForm.controls.confirmUsrPassword.pristine" class="text-danger">
+                                Password NOT match.
+                              </small>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label" for="">Department:
+                                <span class="star">*</span>
+                            </label>
+                            <select  (change)="onChangeDepartmentId($event)"  value="0"   formControlName="dptId" required
+                            class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="0" >--Select--</option>
+                              <option *ngFor="let dpt of Departments" value={{dpt.dptId}} >   {{dpt.dptName}}   </option>
+                            </select> 
+                            <small [hidden]="userForm.controls.dptId.valid || userForm.controls.dptId.pristine" class="text-danger">
+                              Department is required.
+                            </small>
+                            </div>
+                            <div class="form-group">
+                              <label class="control-label" for="">Branch:
+                                <span class="star">*</span>
+                            </label>
+                            <select  (change)="onChangeBranchId($event)"  value="0"   formControlName="brnId" required
+                            class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="0" >--Select--</option>
+                              <option *ngFor="let brn of Branches" value={{brn.brnId}} >   {{brn.brnName}}   </option>
+                            </select> 
+                            <small [hidden]="userForm.controls.brnId.valid || userForm.controls.brnId.pristine" class="text-danger">
+                              Branches is required.
+                            </small>
+                            </div>
+                            <div class="footer text-center">
+                               <button type="submit" class="btn btn-primary">Create</button>
+                              <!-- {{ userForm.value | json }} -->
+                          </div>
+                        </div>
+                    </div>
+            </div>
+          </form>
+        </div>
+ 
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Users List</h4>
+                                           <!-- Toolbar -->
+                                           <form novalidate [formGroup]="searchForm"> 
+                                            <div class="card col-md-12 toolbarCard backgroundCard" >
+                                              <div class=" col-md-12">
+                                                <div class=" col-md-4" >
+                                                  <i class="pe-7s-add-user toolbarIcon" (click)="onShowAddEdit()"  ></i>    
+                                                  <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllEmployees()" ></i>   
+                                                  <i class="pe-7s-trash toolbarIcon" (click)="onDeleteAllSellected()" ></i>  
+                                                  <i class="pe-7s-cloud-download toolbarIcon"  (click)="onExportExcel()"  ></i>  
+                                               </div>
+                                                <div class=" col-md-2">
+                                                  <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                                    <option value="5">Rows</option>
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                        
+                                                    </select> 
+                                                </div>
+                                                <div class=" col-md-6 marginsPaging" >
+                                                  <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                                                </div>
+                                                <br>
+                                              </div>
+                                              <div class=" col-md-12">
+                                                <div class=" col-md-2">
+                                                  <select formControlName="DepartmentName" [ngStyle]="{'background-color': searchForm.controls.DepartmentName.value ? 'gray' : 'white'}"
+                                                  class="form-control" data-title="Single Select" placeholder="Departments"
+                                                  data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                                  <option value="" >All-Departments</option>
+                                                  <option *ngFor="let a of Departments" value={{a.dptName}} > {{a.dptName}} </option>
+                                                </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                  <select value="0"  formControlName="BranchName"   [ngStyle]="{'background-color': searchForm.controls.BranchName.value ? 'gray' : 'white'}"
+                                                    class="form-control" data-title="Single Select" 
+                                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                                    <option value="">All-Branchs</option>
+                                                    <option *ngFor="let a of Branches" value={{a.brnName}} > {{a.brnName}} </option>
+                                                  </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                  <select value="0"  formControlName="CompanyName"  [ngStyle]="{'background-color': searchForm.controls.CompanyName.value ? 'gray' : 'white'}"
+                                                    class="form-control" data-title="Single Select" 
+                                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                                    <option value="">All-Companies</option>
+                                                    <option *ngFor="let a of Companys" value={{a.comName}} > {{a.comName}} </option>
+                                                  </select>
+                                                </div>
+                                     
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                                                </div>
+                                                <div class=" col-md-2 marginsSearch ">
+                                                  <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </form>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                  Img/HrCode
+                                </th>
+                                <th >
+                                  Account.Name 
+                                </th>
+                                <th >
+                                  User Full Name 
+                                </th>
+                                <th >
+                                  Email 
+                                </th>
+                                <th >
+                                  Login Acc 
+                                </th>
+                                <th >
+                                  Roles 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Employees; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>    <img [src]="row.EmpImg" width="25" class="img-rounded" >  {{row?.empHRCode}}</td>
+                                <td>{{ row?.accoutName }}</td>
+                                <td>{{ row?.empFullName }}</td>
+                                <td>{{ row?.usrEmail }}</td>
+                                <td>{{ row?.isUsertoLogin }}</td>
+                                <td>
+                                  <ul *ngFor="let r of row?.Roles">
+                                    <li>{{ r.roleName }} </li> 
+                                  </ul>
+                              
+                                </td>
+                                <!-- <td  > 
+                                  <ul *ngFor="let prv of row.Privileges">
+                                    <li>{{ prv }} </li> 
+                                  </ul>
+                                </td> -->
+
+                                <td>
+                                  <a (click)="onEditUser(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteUser(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+</div>

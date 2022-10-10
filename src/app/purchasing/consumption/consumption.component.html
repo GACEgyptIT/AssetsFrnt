@@ -1,0 +1,288 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <!-- <ngx-alerts></ngx-alerts> -->
+      <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading> -->
+      <div class="content" >
+        <div class="row card col-md-12">
+            <div class="content">
+                    <div class="row col-md-12"  >
+                      <h4 class="title">Consumption</h4>  
+                    </div>
+                             <form novalidate [formGroup]="searchForm"> 
+                              <div class="card col-md-12 toolbarCard" >
+                                <div class=" col-md-12">
+                                  <div class=" col-md-4" >
+                                    <i class="pe-7s-cloud-download toolbarIcon" (click)="onExportExcel()" ></i>
+                                    <i class="pe-7s-print toolbarIcon"  printTitle="Assets-List" printSectionId="print-section" ngxPrint> </i>
+                                    <i class="pe-7s-refresh-2 toolbarIcon" (click)="Refresh()" ></i>   
+                                  </div>
+                                  <div class=" col-md-2">
+                                    <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                      <option value="5">Rows</option>
+                                      <option value="5">5</option>
+                                      <option value="10">10</option>
+                                      <option value="25">25</option>
+                                      <option value="50">50</option>
+                                      <option value="100">100</option>
+            
+                                      </select> 
+                                  </div>
+                                  <div class=" col-md-6 marginsPaging" >
+                                    <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                                  </div>
+                                    <br><br>     <br>
+                                
+                                </div>
+                                <div class=" col-md-12">
+                                  <div class="col-md-2">
+                                    <label class="control-label" for="">Select Item:
+                                   
+                                   </label>
+                                    <select value="0" formControlName="itmId" 
+                                    [ngStyle]="{'background-color': ItemNameIsSelected ? 'gray' : 'white'}" (change)="checkItemFilterSelection($event.target.value)"
+                                      class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                      <option value="">All-Items</option>
+                                      <option *ngFor="let itm of Items" value={{itm.itmId}} > {{itm.itmName}} </option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <label class="control-label" for="">Filter Dates:
+                                        <span class="star">*</span>
+                                    </label>
+                                    <input 
+                      
+                                    (bsValueChange)="onFilterByDate($event)"
+                                    type="text"
+                                    class="form-control"
+                                    #daterangepicker="bsDaterangepicker"
+                                    placeholder="Select Date Range"
+                                    bsDaterangepicker
+                                    [bsConfig]="{ rangeInputFormat : 'MMMM Do YYYY, h:mm:ss a', dateInputFormat: 'MMMM Do YYYY, h:mm:ss a', showWeekNumbers: false }">
+                                  </div> 
+                                  <div class="col-md-2" >
+                                    <label class="control-label" for="">Select Type:
+                                      <span class="star">*</span>
+                                   </label>
+                                    <select value="--Select--" (change)="onChangeFilterBy($event)"
+                                        class="form-control" data-title="Single Select" 
+                                        data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                                <option value="--Select--" selected>--Select--</option>
+                                                <option value="Employee" selected>Employee</option>
+                                                <option value="Department" >Department</option>
+                                                <option value="Branch" >Branch</option>
+                                                <option value="Company" >Company</option>
+                                    </select>
+                                   </div>
+                                   <div  class="col-md-3" *ngIf="getEmpId.value != null">
+                                    <label class="control-label" for="">Employee:
+                                      <span class="star">*</span>
+                                  </label>
+                                    <select value="0"  formControlName="empId"  (change)="onEmployeeSelect($event)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                          <option value="0" selected>-- Select--</option>
+                                            <option *ngFor="let emp of Employees" value={{emp.empId}} >
+                                                {{emp.empFullName}}
+                                            </option>
+                                    </select>
+                                  </div>
+                                  <div  class="col-md-3" *ngIf="getDptId.value != null">
+                                    <label class="control-label" for="">Department:
+                                      <span class="star">*</span>
+                                  </label>
+                                    <select value="0"  formControlName="dptId"  (change)="onDepartmentSelect($event)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                          <option value="0" selected>-- Select--</option>
+                                            <option *ngFor="let dpt of Departments" value={{dpt.dptId}} >
+                                                {{dpt.dptName}}
+                                            </option>
+                                    </select>
+                                  </div>
+                                  <div  class="col-md-3" *ngIf="getBrnId.value != null">
+                                    <label class="control-label" for="">Branchs:
+                                      <span class="star">*</span>
+                                  </label>
+                                    <select value="0"  formControlName="brnId"  (change)="onBranchSelect($event)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                          <option value="0" selected>-- Select--</option>
+                                            <option *ngFor="let brn of Branchs" value={{brn.brnId}} >
+                                                {{brn.brnName}}
+                                            </option>
+                                    </select>
+                                  </div> 
+                                  <div  class="col-md-3" *ngIf="getComId.value != null">
+                                    <label class="control-label" for="">Companies:
+                                      <span class="star">*</span>
+                                  </label>
+                                    <select value="0"  formControlName="comId"  (change)="onCompanySelect($event)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                          <option value="0" selected>-- Select--</option>
+                                            <option *ngFor="let com of Companys" value={{com.comId}} >
+                                                {{com.comName}}
+                                            </option>
+                                    </select>
+                                  </div> 
+
+                                  <div class="col-md-2 marginsSearch">
+                                       <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                                    </div>
+                              <br><br><br>
+                                </div>
+                              </div>
+                            </form>
+                            <!-- {{ searchForm.value | json  }} -->
+                      <div  class="col-md-12" style="border:5mm;">
+                        <div *ngIf="SOH.EmpName != null" class="col-md-6">
+                          Employee:  {{ SOH.EmpName }}
+                        </div>
+                        <div *ngIf="SOH.DepName != null" class="col-md-6">
+                          Department:  {{ SOH.DepName }}
+                        </div>
+                        <div *ngIf="SOH.BrnName != null" class="col-md-6">
+                          Branch:  {{ SOH.BrnName }}
+                        </div>
+                        <div *ngIf="SOH.ComName != null" class="col-md-6">
+                          Company:  {{ SOH.ComName }}
+                        </div>
+                        <div  *ngIf="SOH.ItemName != null" class="col-md-6">
+                          Item:  {{ SOH.ItemName }}
+                        </div>
+              
+                      </div>
+
+                      <!-- By Emp/Dpt/Brn/Com -->
+                      <div  *ngIf="getFilterBy.value == null && getItmId.value > 0"> 
+                        <legend>
+                         <h3> Item Transactions: </h3>    
+                        </legend>
+                        <table *ngIf="SOH?.ItemVMs != null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                          <thead>
+                                                <tr>
+                                                  <th >
+                                                    # 
+                                                  </th>
+                                                  <th>
+                                                  Date 
+                                                </th>
+                                                <th >
+                                                  Item 
+                                                </th>
+                                                <th>
+                                                  Qnt
+                                                </th>
+                                                <th  >
+                                                  Price
+                                                </th>
+                                                <th >
+                                                  Cost 
+                                                </th>
+                                                <th>
+                                                  Consumer
+                                                </th>
+                                                </tr>
+                                          </thead>
+                                          <tbody >
+                                                <tr  *ngFor="let row of SOH.ItemVMs | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                                  <td>{{ i+1 }}</td>
+                                                  <td>{{ row?.Date }}</td>
+                                                  <td>{{ row?.itmName }}</td> 
+                                                  <td>{{ row?.ItmQnt }}</td> 
+                                                  <td>{{ row?.itmPrice }}</td> 
+                                                  <td>{{ row?.ItmCost }}</td>
+                                                  <td>{{ row?.ConsumtionName }}</td>
+                                                  <td>
+                                                </tr> 
+                                                <tr  *ngIf="SOH?.ItemVMs.length == 0 ">
+                                                  <td >
+                                                        <div  class="text-center" style="color: red; width: auto">
+                                                          <p >
+                                                              No Items found
+                                                          </p>
+                                                        </div>
+                                                  </td>
+                                                </tr>
+                                          </tbody>
+                        </table>
+                        <table *ngIf="SOH?.ItemVMs == null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                          <thead>
+                          </thead>
+                          <tbody >
+                                <tr  >
+                                  <td >
+                                        <div  class="text-center" style="color: red; width: auto">
+                                          <p >
+                                              No Items found
+                                          </p>
+                                        </div>
+                                  </td>
+                                </tr>
+                          </tbody>
+                        </table>
+
+                      </div>
+                      
+                      <div  *ngIf="getFilterBy.value != null"> 
+                        <legend>
+                        <h3>   Cunsumer Details  </h3>  
+                        </legend>
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                          <thead>
+                                <tr>
+                                  <th >
+                                  Emps 
+                                </th>
+                                <th>
+                                  Dpts
+                                </th>
+                                <th  >
+                                  Brns 
+                                </th>
+                                <th  >
+                                  Coms 
+                                </th>
+                                </tr>
+                          </thead>
+                          <tbody >
+                                <tr>
+                                  <td>
+                                    <span *ngIf="SOH.EmployeeVMs?.length == 0">No Emps</span>
+                                    <ul *ngFor="let row of SOH.EmployeeVMs" >
+                                     
+                                      <li *ngIf="row.empFullName != ''" > ( {{row.empFullName}} ) {{ row.Qnt}} X {{ row.Price }} = {{ row.Cost }}. </li>
+                                    </ul>
+                                  </td>
+                                  <td>
+                                    <span *ngIf="SOH.DepartmentVMs?.length == 0">No Dpts</span>
+                                    <ul *ngFor="let row of SOH.DepartmentVMs" >
+                                     
+                                      <li *ngIf="row.dptName != ''" > ( {{row.dptName}} ) {{ row.Qnt}} X {{ row.Price }} = {{ row.Cost }}. </li>
+                                    </ul>
+                                  </td>
+                                  <td>
+                                    <span *ngIf="SOH.BranchVMs?.length == 0">No Brns</span>
+                                    <ul *ngFor="let row of SOH.BranchVMs" >
+                                     
+                                      <li *ngIf="row.brnName != ''" > ( {{row.brnName}} ) {{ row.Qnt}} X {{ row.Price }} = {{ row.Cost }}.  </li>
+                                    </ul>
+                                  </td> 
+                                  <td>
+                                      <span *ngIf="SOH.CompanyVMs?.length == 0">No Coms</span>
+                                      <ul *ngFor="let row of SOH.CompanyVMs" >
+                                      
+                                        <li *ngIf="row.comName != ''" > ( {{row.comName}} ) {{ row.Qnt}} X {{ row.Price }} = {{ row.Cost }}. </li>
+                                      </ul>
+                                 </td> 
+                                </tr> 
+                          </tbody>
+                         </table>
+                      </div>
+
+                   </div> 
+            </div>
+
+      </div>
+    </div>
+  </div>

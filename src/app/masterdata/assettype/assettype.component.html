@@ -1,0 +1,110 @@
+<div class="main-content">
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+  <ngx-alerts></ngx-alerts>
+    <div class="container-fluid">
+      <div class="row"   >
+            <div class="card col-md-12">
+              <form [formGroup]="typForm" (ngSubmit)="onSubmit()">
+              <!-- <div class="content"> -->
+        
+                      <div class="form-group col-md-12">
+                            <legend>         
+                              Type ID: {{ getTypeForm.AssetTypeId.value }}
+                            </legend>
+                          <div class="row">
+                            <div class="form-group col-md-3">
+                              <label class="control-label" for="">Category:
+                                <!-- <span class="star">*</span> -->
+                            </label>
+                            <select     value="0"  formControlName="AssetCategoryId"
+                            class="form-control" data-title="Single Select"  (change)="onIncrementTypCode($event)"
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                            <option value="0" >--Select--</option>
+                              <option *ngFor="let com of Categorys" value={{com.AssetCategoryId}} >  {{com.astCategoryName}}</option>
+                            </select> 
+                            <!-- <small [hidden]="employeeForm.controls.posId.valid || employeeForm.controls.posId.pristine" class="text-danger">
+                              Company is required.
+                            </small> -->
+                            </div>
+                            <div class="form-group col-md-3">
+                              <label class="control-label" for="">Type: <span class="star">*</span> </label>
+                              <input type="text" placeholder="Type Code" formControlName="astTypeName"  class="form-control" >
+                              <small [hidden]="typForm.controls.astTypeName.valid || typForm.controls.astTypeName.pristine" class="text-danger">
+                                    Type Name is required.
+                              </small>
+                            </div>
+                            <div class="form-group col-md-3">
+                              <label class="control-label" for="">Code (second 2 digits out of 8): <span class="star">*</span> </label>
+                              <input type="text" placeholder="XX10Xxxx" (keyup)="OnCodeChange($event)" formControlName="astTypeCode"  class="form-control" disabled >
+                              <small [hidden]="typForm.controls.astTypeCode.valid || typForm.controls.astTypeCode.pristine" class="text-danger" >
+                                    Code is required 2 digits.
+                              </small>
+                              <small *ngIf="CodeExist" class="text-danger">
+                                Code is already exist
+                              </small>
+                            </div>
+                     
+                          </div>
+                          <div class="footer">
+                      
+                                  <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('Add')" *ngIf="getTypeForm.AssetTypeId.value == 0" [disabled]="typForm.status == 'INVALID' "> Add </button> <!--  [disabled]="typForm.status == 'INVALID' " -->
+                                  <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('Save')" *ngIf="getTypeForm.AssetTypeId.value > 0" [disabled]="typForm.status == 'INVALID' "> Save </button> <!--*ngIf="getTypeForm.AssetTypeId.value > 0" [disabled]="typForm.status == 'INVALID' "-->
+                                  <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                          </div>
+                      </div>
+        
+              <!-- </div> -->
+            </form>
+      
+            </div>
+      </div>
+      <div class="row" >
+           <div class="card">
+                  <div class="content">
+                    <h4 class="title">Types List</h4>
+                  </div>
+                    <div class="fresh-datatables">
+                      <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                      <!-- Table Headers -->
+                      <thead>
+                            <tr>
+                              <th >
+                                ID 
+                              </th>
+                              <th >
+                                Category
+                              </th>
+                              <th >
+                                Type
+                              </th>
+                              <th >
+                                Actions 
+                              </th>
+                            </tr>
+                      </thead>
+                      <!-- Table Body -->
+                      <tbody  >
+                            <tr  *ngFor="let row of Categorys, let i = index">
+                              <td>{{ i+1 }}</td>
+                              <td>{{ row?.astCategoryName }} - Cat Code:  {{ row?.astCategoryCode}}XX</td>
+                              <td >
+                                <span *ngIf="row.AssetTypeVMs?.length == 0">No type</span>
+                                <ul *ngFor="let t of row.AssetTypeVMs" >
+                                  <li  > Type Code ({{ t.astTypeCode }})  {{ t.astTypeName }}
+                                    <a (click)="onDeleteType(t)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> 
+                                  </li>
+                                </ul>
+                               
+                              </td>
+                              <td>
+                              
+                               
+                            </tr>
+                      </tbody>
+                      </table>
+                    </div>
+            </div>
+
+      </div>
+    </div>
+</div>

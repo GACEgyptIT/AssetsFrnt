@@ -1,0 +1,111 @@
+http://itintranet.gacegy.local/
+http://itintranetapi.gacegy.local/
+SQL-2K8\sqlserver2k8
+
+<add name="DBContext" connectionString="data source=SQL-2K8\sqlserver2k8;initial Catalog=IntranetAPI;Persist Security Info=True;User ID=sa;Password=Admin@123" providerName="System.Data.SqlClient" />
+
+
+npm cache clean --force
+npm install
+npm run ng build --prod
+
+
+
+
+Import Employee  Analysis: 
+1- get imported accounts.
+2- Update Imported Employees chack if exist and save to imported employees
+3- Assign Account type to the Imported Employees( archiveAccount, serviceAccount, enabled ) >>>>>>>
+4- onSave - delete saved account.
+	- Check if AccountName exist.
+	- Save to Employees
+	- Save to ServiceAccounts.
+	- Save to ArchiveAccounts.
+ 
+4- onGetallImportedEmployees. 
+	- Check if exist base on HrCode - true. In Case emp created manual.
+
+Waiting:
+- Show Assets array in sweet alert. - in Delete employee - add emp name in confirmation - add assets list to the alert. pending.
+https://valor-software.com/ngx-bootstrap/#/datepicker
+- Datetime - Invoice Mng - Done
+- Date/time in Invoice Mng / Employee Birthday / asset creation.  https://stackblitz.com/edit/ngx-bootstrap-datepicker?file=app%2Fapp.module.ts 
+- Filter assets by Date from To.
+- Observable =navbar username. Done.
+- Observable - directly refresh after login or logout / after Add Another Emp check the code exist / when addand add another asset code not check 
+   / when upload asset Excel file need to refresh without reload the page / Asset Transfer Page.
+- Employee Activate Checkbox condition - In Employee page - color red or black. pending
+
+
+- In Asset mng Page - Export Employee xls with Assets related - Add Assets in seperate columns.  Donnnnnnnnnnnne.
+- When try to delete Employee has an asset and it redirect to Asset transfer - employee NOT fill in the dropdown menue.
+
+- Employee table not showing employees in the laptop screen view 
+- Employee page onEdit function, fill the employeeForm (Birthday).
+- In Role page - Edit role privileges NOT fill the Dropdown list.
+- In Assets transfer Page - After assign Asset to Emp -  need to refrsh Automatic (if we select same employee no asset apear unless manual refresh)
+- Employee/ Asset Transfer pages - need two click to open.
+- Email validation.
+- Toolbar bar in Asset page need to move inside the card.
+- Hash password
+- In new Employee page - add the default img as file NOT src.  
+
+
+My List:
+- Accounts to be - Imported Employees
+- Invoice filter by dates from / to .
+- Employee Active Checkbox. Instead of (Disabled/Resigned/Canceled/ServiceAccount/ArchiceEmail)
+- Inforce asset to be asigned to any one .
+- Users permission in one page - Each user upload invoices only to his Branch at the function side
+   (CostCenter dropdown list should be updated only based on the branch permission).
+- Send Email notification.
+- Edit/Save Employee  (	GENARIC/Indiv emails - birthdate - defualt dropdown lists )
+- New Employee Auto complete  ( Full Name - Indiv Emails - dropdownlist on domains )
+- Onselect All count in Statistics. (  Email Mng )
+- Statistics to Assets/Imported Assets Employees/Imported Employees.
+- Register user by End user.
+- Toolbar in pages  Assets/Mng Emails/ users  - .toolbarIcon:hover { }
+- Employee Import Page - check Emp Code when Import employees (statiscitc)
+- Home Page.
+- Download Stored Invoices from a path.
+- Asset page needs twotime click to open.
+- Add scrolbar to Assets Table - responsive to small view. (Asset Transfer / Mng Emails / Employees / Import Employees / Users List)
+- Asset needs two clicks to open
+- Add the list of assets belomgs to employee to Select ListBox. (Lists) in Asset Transfer page
+
+- Test - / Alerts / paging rows / tool bar / Hide Column if empty / Search / sorting column / OnSelect Checkbox (Single/Multiple/All)-  actions(Print/Export Excel/Save/delete one/delete selected)
+- Upload and download invoices.
+- Select All CHeckbox in Assets
+- Save in Employee.
+- Employee page onEdit function, fill the employeeForm
+- Validation user AccountName/HrCode/ Email alreadytaken validation custom validation
+- Validation
+	- onDelete Employee - check related assets
+	- onDelete Privilege - check related roles
+	- onCreate Employee - check email duplication and email pattern
+	- Unify alerts - Created/Saved/Deleted/NotSelected/DB-Conection Error
+- Mng Asset Page 
+	- Show current Assets for selected Employee.
+	- Show the Employee which assets removed from.
+
+- OnEdit Employee - Address - need to check Emails checkbox-show Genaric Emails - direct manager- Show Photo (From Storage/or Folder)
+- Add Img/url to local storage.
+
+
+- User pages ( verfy email - Create Role with privilege)
+- Dashboard statistics.
+- Paging in all 
+
+
+- Generate Codes automaticlly. 
+- Check asset code if exsit.
+- pages in AssetsUpload not working.
+- Add static index in all tables list 
+- Assets Search not working in Company/EMPLOYEE /BRANCH/ ASSET TYPE/ Assets
+- Filter by Asset Type / Employee Dpt.
+
+Ref:
+
+- Alerts - https://sweetalert2.github.io/#examples
+
+- Validation red border : https://stackblitz.com/edit/angular-7-reactive-form-validation?file=app%2Fapp.component.html 

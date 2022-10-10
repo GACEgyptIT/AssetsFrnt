@@ -1,0 +1,54 @@
+<div class="main-content">
+    <button (click)="showEmailSectionFn()" >Show Emails</button><br>   <br>
+
+    <form [formGroup]="employeeForm" (submit)="Submit()">
+        <div  class="card col-md-12"  [hidden]="!showEmailSection">
+            <br>
+            <legend> Emails Details</legend>
+
+            <div formArrayName="emailsINDIV" class="col-md-4">
+                <button (click)="onAddIndividualEmail(employeeForm.controls.emailsINDIV)">Add Individual Email</button><br>
+                <div *ngFor="let mail of getIndividualEmailsForm.controls; let i = index" >
+                    <div [formGroupName]="i" class="col-md-4" >
+                        <label> Email {{i+1 }} : </label>
+                        <input  formControlName="emailAddress" placeholder="Email Address" />  <a (click)="deleteIndividualEmail(i)" routerLink="active" style="color: crimson;" >   X </a>  
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div formArrayName="emailsGEN" class="col-md-4">
+                <button (click)="onAddGenaricEmail(employeeForm.controls.emailsGEN)">Add Genaric Email</button><br>
+                <div *ngFor="let mail of getGenaricEmailsForm.controls; let i = index" >
+
+                    <div [formGroupName]="i" class="col-md-4" >
+                        <label> Email {{i+1 }}:</label>
+                        <ngx-autocomplete
+                        formControlName="genEmailId"
+                        [searchKeyword]="'genEmailAddress'" 
+                        [inputId]="'searchGmail'" 
+                        [placeholderValue]="'Enter the Employee Name'" 
+                        [entries]="Emails" 
+                        (selectedValue)="onSelectGenaricEmail($event)"
+                        >
+                    </ngx-autocomplete>
+                    <a (click)="deleteGenaricEmail(i)" routerLink="active" style="color: crimson;" >   X </a>  
+                    </div>
+                </div>
+  
+                <div class="footer" class="col-md-12">
+                    <button type="submit"   >Submit</button>
+                </div>
+                <br>
+            </div>
+  
+        </div>
+
+
+    </form>
+    <!-- <div>
+        <h4>  employeeForm.value  </h4>
+        {{ employeeForm.value | json }}
+    </div> -->
+</div>

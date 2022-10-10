@@ -1,0 +1,618 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <ngx-alerts></ngx-alerts>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <div class="content" >
+      <!-- Add-Edit Section -->
+      <div class="row card col-md-12"  [hidden]="getAssetId.value == null"   >
+          <div class="content" >
+                   <form [formGroup]="assetForm" (ngSubmit)="onSubmit('')">
+                            <h4 class="title">
+                              Add/Edit Asset Code: {{ getastCode.value }}   
+                              <span [ngStyle]="{'color': IsScrap ? 'black' : 'red'}" class="pull-right" >   <input id="ScrapCheckbox"  class="pull-right"  (click)="onSelectScrap($event)"  class=" form-check-input "  type="checkbox"  value="!checked" />  Scrap  </span>
+                            </h4> 
+                            <div class="row card backgroundCard col-md-12"  >
+                                      <!-- Basic Details -->
+                                      <div class="col-md-12">
+                                          <br>
+                                          <div class="form-group col-md-3">
+                                            <!-- <input name="options" ng-control="options" type="radio" [value]="1"  [(ngModel)]="model.options" ><br/>
+                                            <input name="options" ng-control="options" type="radio" [value]="2" [(ngModel)]="model.options" ><br/>
+                                            <input name="options" ng-control="options" type="radio" [value]="1"  [(ngModel)]="model.options" ><br/> -->
+
+                                            <label class="control-label" for="">Categories:
+                                              <span class="star">*</span>
+                                            </label>
+                                            <select  (change)="onUpdateCategoryTypeBrandLists($event, 'Categories', 'new', null, null)" required  formControlName="AssetCategoryId"      
+                                            class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option  value="">--Select--</option>
+                                            <option *ngFor="let typ of AssetCategorys"  value={{typ.AssetCategoryId}}  >
+                                                {{typ.astCategoryName }} 
+                                            </option>
+                                            </select>
+                                            <small [hidden]="getAssetId.valid || getAssetId.pristine"  class="text-danger">
+                                                Asset Type is required.
+                                            </small>
+                                          </div>
+                                          <div class="form-group col-md-3">
+                                            <label class="control-label" for="">Types:
+                                              <span class="star">*</span>
+                                            </label>
+                                            <select  (change)="onUpdateCategoryTypeBrandLists($event, 'Types', 'new', null, null)" required  formControlName="AssetTypeId"      
+                                            class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option  value="">--Select--</option>
+                                            <option *ngFor="let typ of AssetTypes"  value={{typ.AssetTypeId}}  >
+                                                {{typ.astTypeName }} 
+                                            </option>
+                                            </select>
+                                            <small [hidden]="getAssetId.valid || getAssetId.pristine"  class="text-danger">
+                                                Asset Type is required.
+                                            </small>
+                                        
+                                          </div>
+                                          <div class="form-group col-md-3">
+                                            <label class="control-label" for="">Brands:
+                                              <span class="star">*</span>
+                                            </label>
+                                            <select required (change)="onUpdateCategoryTypeBrandLists($event, 'Brands', 'new', null, null)"  formControlName="AssetBrandId"      
+                                            class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option  value="">--Select--</option>
+                                            <option *ngFor="let typ of AssetBrands"  value={{typ.AssetBrandId}}  >
+                                                {{typ.astBrandName }} 
+                                            </option>
+                                            </select>
+                                            <small [hidden]="getAssetId.valid || getAssetId.pristine"  class="text-danger">
+                                                Asset Type is required.
+                                            </small>
+                                          </div>
+                                          <div class="form-group col-md-3">
+
+                                              <label class="control-label" for="">Purchased Date:
+                                                  <span class="star">*</span>
+                                              </label>
+                                              <div class="form-group">
+                                                <input    
+                                                      required
+                                                      formControlName="astPurchaseDate"
+                                                      class="form-control"
+                                                      #datepickerYMD="bsDatepicker"
+                                                      bsDatepicker
+                                                      [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD HH:mm' }">
+                                              </div> 
+                                              <span *ngIf="assetForm.value.astPurchaseDate != null" style="color: green;" >   {{ assetForm.value.astPurchaseDate | json }} </span>
+                                          </div>
+                                      </div>
+                                      <div>
+                                    
+                                      </div>
+                                      <!-- Computing Details -->
+                                      <div class="col-md-12" [hidden]="hideAssetTypeVoiceLine == true || hideAssetTypeDataLine == true || hideAssetTypeOthers == true" >  
+                                        <legend>     
+                                          <!-- Computing/Mobile Details:   -->
+                                        </legend>
+                                        <div class="form-group col-md-3">
+                                          <label class="control-label" for="">Description:
+                                            <span class="star">*</span>
+                                        </label>
+                                        <input type="text" placeholder="Description" required  formControlName="astDescription" class="form-control" > 
+                                        <small [hidden]="getDescription.valid || (getDescription.pristine)" class="text-danger">
+                                          Description is required.
+                                        </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label  for="" class="control-label">Code:
+                                                <span class="star">*</span>                                
+                                            </label>
+                                            <input type="text" placeholder="Show Code Guide " (keyup)="OnCodeChange($event)"  class="form-control" formControlName="astCode">
+                                            <small [hidden]="getastCode.valid || getastCode.pristine" class="text-danger">
+                                             Code format require 8 Digits <br>
+                                            </small>
+                                            <small *ngIf="CodeExist" class="text-danger">
+                                              Code is already exist
+                                               <!-- <a (click)="onBringExistingAsset()" > Get the existing One for editing </a> -->
+                                            </small>
+                                            <small *ngIf="!CodeExist && loading == false && getastCode.valid && !getastCode.pristine && assetForm.controls.astCode.value != null " style="color: green;">
+                                              Code is valid
+                                            </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label class="control-label" for="">Serial Number:
+                                            <span class="star">*</span> 
+                                          </label>
+                                          <input type="text" placeholder="Serial Numder" class="form-control" (keyup)="OnSerialNumberChange($event)" formControlName="astSerialNumber" required>
+                                          <small  *ngIf="SerialNumberUnValid" class="text-danger">
+                                            - Required at least 3 characters    <br>
+                                          </small>
+                                          <small *ngIf="SerialNumberExist" class="text-danger">
+                                            - SN already used.
+                                          </small>
+                                          <small [hidden]="SerialNumberExist || assetForm.controls.astSerialNumber.status == 'INVALID' " style="color: green;">
+                                            - SN is valid.
+                                          </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                        <label  for="" class="control-label">DailNumber/SIM/Cirt:
+   
+                                          </label>
+                                          <input type="text" placeholder="Part Number"  (keyup)="OnPNSIMNumberChange($event)"  class="form-control" formControlName="astPartNumber" >
+                                          <small  *ngIf="PartNumberUnValid" class="text-danger">
+                                            - At least 3 characters    <br>
+                                          </small>
+                                          <small *ngIf="PartNumberExist" class="text-danger">
+                                            - Number is already used.
+                                          </small>
+                                          <small [hidden]="PartNumberExist || assetForm.controls.astPartNumber.status == 'INVALID' " style="color: green;">
+                                            - Number is valid.
+                                          </small>
+                                        </div>
+                                      </div>
+                                      <!-- Lines Details -->
+                                      <!-- <div class="col-md-12" [hidden]="hideAssetTypeDesktop == true || hideAssetTypeLaptop == true || hideAssetTypeMiFi == true || hideAssetTypeMobile == true || hideAssetTypeServer == true || hideAssetTypeStorage == true || hideAssetTypeOthers == true" >
+                                        <legend>     
+                                          Line Details:  
+                                        </legend>
+                                        <div class="form-group col-md-3">
+                                            <label class="control-label" for="">Description:
+                                                <span class="star">*</span>
+                                            </label>
+                                            <input type="text" placeholder="Description" required formControlName="astDescription" class="form-control" >
+                                            <small [hidden]="getDescription.valid || getDescription.pristine" class="text-danger">
+                                              Description is required.
+                                            </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label  for="" class="control-label">Code:
+                                                <span class="star">*</span>
+                                            </label>
+                                            <input type="text" placeholder="Show Code Guide " (keyup)="OnCodeChange($event)" required class="form-control" formControlName="astCode">
+                                            <small [hidden]="getastCode.valid || getastCode.pristine" class="text-danger">
+                                              Format(6 Digits): Lines 300xxx
+                                            </small>
+                                            <small *ngIf="CodeExist" class="text-danger">
+                                              Code is already exist, <a (click)="onBringExistingAsset()"> Get the existing One for editing </a>
+                                            </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label  for="" class="control-label">SIM/Circuit #:
+                                          </label>
+                                          <input type="text" placeholder="Circuit Number"  class="form-control" formControlName="astCircuitNumber">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label class="control-label" for="">Dail Number:
+                                         </label>
+                                          <input type="text" placeholder="Dial Numder" (keyup)="OnDailNumberChange($event)"   class="form-control" formControlName="astDialNumber">
+             
+                                              <small  *ngIf="DailNumberUnValid" class="text-danger">
+                                                - Must be 11 digits   <br>
+                                              </small>
+                                              <small *ngIf="DailNumberExist" class="text-danger">
+                                                - Number already used.
+                                              </small>
+                                              <small [hidden]="DailNumberExist || assetForm.controls.astDialNumber.status == 'INVALID' " style="color: green;">
+                                                - Number is valid.
+                                              </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                          <label  for="" class="control-label">Charging:
+                                          </label>
+                                        <select formControlName="Charging" value="Business"
+                                          class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                          <option value="Business" > Business  </option>
+                                          <option value="Private" > Private </option>
+                                          <option value="Shared" > Shared </option>
+                                        </select> 
+                                        <small [hidden]="assetForm.controls.oprId.valid || getBranchId.pristine" class="text-danger">
+                                          Branch is required.
+                                        </small>
+                                        </div>                                       
+                                        <div class="form-group col-md-3">
+                                          <label  for="" class="control-label">Operator:
+                                          </label>
+                                        <select value="0" (change)="onChangeOperatorId($event)"
+                                        class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                          <option value="0" >--Select--</option>
+                                          <option *ngFor="let opr of Operators" value={{opr.oprId}} >
+                                              {{opr.oprName}}
+                                          </option>
+                                         </select> 
+                                        <small [hidden]="assetForm.controls.oprId.valid || getBranchId.pristine" class="text-danger">
+                                          Branch is required.
+                                        </small>
+                                        </div>                                       
+                                        <div class="form-group col-md-3">
+                                           <label  for="" class="control-label">Acc#:
+                                         
+                                          </label>
+                                       
+                                        <select value="0" formControlName="OprAccNumberId"
+                                           class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                          <option value="0" >--Select--</option>
+                                          <option *ngFor="let a of Accounts" value={{a.OprAccNumberId}} >
+                                              {{a.OprAccNumberName}}
+                                          </option>
+                                         </select> 
+                                        <small [hidden]="getDescription.valid || getDescription.pristine" class="text-danger">
+                                          Description is required.
+                                        </small>
+                                        </div>
+                                        <div class="form-group col-md-3">
+   
+                                          <label  for="" class="control-label">Rate Plan:
+                                            <span class="star">*</span>
+                                          </label>
+                                        <select value="0" formControlName="OperatorRatePlanId"
+                                        class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                          <option value="0" >--Select--</option>
+                                          <option *ngFor="let a of Plans" value={{a.OperatorRatePlanId}} >
+                                              {{a.OperatorRatePlanName}}
+                                          </option>
+                                         </select> 
+                                        <small [hidden]="getDescription.valid || getDescription.pristine" class="text-danger">
+                                          Description is required.
+                                        </small>
+                                        </div>
+                                      </div> -->
+                                      <!-- Others Details -->
+                                      <!-- <div class="col-md-12" [hidden]="hideAssetTypeVoiceLine == true || hideAssetTypeDataLine == true || hideAssetTypeStorage == true || hideAssetTypeLaptop == true || hideAssetTypeDesktop == true || hideAssetTypeServer == true || hideAssetTypeMobile == true || hideAssetTypeMiFi == true" >
+                                                    <legend>     
+                                                      Others  Details:  
+                                                    </legend>
+                                                    <div class="form-group col-md-2">
+                                                        <label class="control-label" for="">Description:
+                                                            <span class="star">*</span>
+                                                        </label>
+                                                        <input type="text" placeholder="Description" required formControlName="astDescription" class="form-control" >
+                                                        <small [hidden]="getDescription.valid || getDescription.pristine" class="text-danger">
+                                                          Description is required.
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label  for="" class="control-label">Code:
+                                                            <span class="star">*</span>
+                                                        </label>
+                                                        <input type="text" placeholder="Show Code Guide " (keyup)="OnCodeChange($event)" required class="form-control" formControlName="astCode">
+                                                        <small [hidden]="getastCode.valid || getastCode.pristine" class="text-danger">
+                                                          Format(6 Digits): Others 400xxx
+                                                        </small>
+                                                        <small *ngIf="CodeExist" class="text-danger">
+                                                          Code is already exist, <a (click)="onBringExistingAsset()"> Get the existing One for editing </a>
+                                                        </small>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                           
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+
+                                                    </div>
+                                      </div> -->
+                                      <!-- Employee Details -->
+                                      <div class="col-md-12" >
+                                        <legend>     
+                                          Assigned To Employee: <span class="star">*</span> <span *ngIf="assetForm.value.EmployeeName"> {{ assetForm.value.EmployeeName | json }} </span> 
+                                        </legend>
+                                            <div class="form-group col-md-4">
+                                                      <ngx-autocomplete
+                                                         required
+                                                        ngDefaultControl
+                                                        formControlName="empId"
+                                                        [searchKeyword]="'empFullName'" 
+                                                        [inputId]="'searchEmployee'" 
+                                                        [placeholderValue]="'Enter the Employee Name'" 
+                                                        [entries]="EmployeesList" 
+                                                        (selectedValue)="selectEmployeeEvent($event)">
+                                                    </ngx-autocomplete>
+                                            </div> 
+                                            <div>
+                                             
+                                              <h5>
+                                                Asset Tree :  {{getAssetCategoryName.value}}  =>  {{getAssetTypeName.value}}  =>   {{getAssetBrandName.value}}
+                                              </h5>
+                                            </div>
+                                      </div>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-md-9">
+                                  <button type="button" (click)="onSubmit('AddAndClose')" class="btn btn-primary" *ngIf="getAssetId.value == 0" [disabled]="assetForm.status == 'INVALID' "> Add & Colse </button> 
+                                  <button type="button" (click)="onSubmit('AddAndAddAnother')" class="btn btn-primary" *ngIf="getAssetId.value == 0" [disabled]="assetForm.status == 'INVALID' "> Add & Add Another </button>
+                                  <button type="button" (click)="onSubmit('Save')"  class="btn btn-primary " *ngIf="getAssetId.value > 0" [disabled]="assetForm.status == 'INVALID' "> Save </button>
+                                </div>
+                                <div class="col-md-3">
+                                  <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                                </div>
+                                <br><br><br>  
+                            </div>
+                   </form>
+          </div>
+        </div>
+      <!-- Statistics -->
+      <div class="row card backgroundCard col-md-12" [hidden]="!showStatistics" >
+        <div class="content" >
+                        <br>
+                         <a class="pull-right" (click)="onShowHideStatistics()" [hidden]="!showStatistics">Hide Statistics</a>
+                                    <legend>   <h4 class="title"> Assets Statistics</h4>   </legend>
+                     
+                                    <div class="col-md-3">
+                                     Laptops:  <span style="color: green;">  {{totalLaptops}} </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                     Desktops :  <span style="color: green;">  {{totalDesktops}} </span>
+                                    </div>
+                                    <div class="col-md-3">
+                                  
+                                       Screens: <span  style="color: green;"> {{ totalScreens }} </span> 
+                                    </div>
+                                    <div class="col-md-3">
+                                     Assets: <span  style="color: black;">  {{totalAssets}} </span>
+                                    </div>
+                                  <br>
+                             
+                              <br>
+                                <div class="col-md-3">
+                                   Servers :   <span  style="color: green;">  {{totalServers}} </span>
+                                </div>
+                                <div class="col-md-3">
+                                   Printers:  <span  style="color: green;">  {{totalPrinters}} </span>
+                                </div>
+                                <div class="col-md-3">
+                                   Data Lines: <span  style="color: green;">  {{ totalDataLines }} </span> 
+                                </div>
+                                <div class="col-md-3">
+                                   Voice Lines: <span  style="color: green;">  {{ totalVoiceLines }} </span> 
+                                </div>
+                              <br>
+                              <br>
+                                <div class="col-md-3">
+                                  Selected:   <span  style="color: black;">  {{selectedAssets}} </span>
+                                </div>
+                                <div class="col-md-3">
+                                   MiFi: <span  style="color: green;">  {{ totalMiFis }} </span> 
+                                </div>
+                                <div class="col-md-3">
+                                   Mobiles: <span  style="color: green;">  {{ totalMobiles }} </span>
+                                </div>
+                                <div class="col-md-3">
+                                  Not assigned to Emp:  <span  style="color: red;">   {{noEmployee}} </span>
+                                </div>
+                           <br>
+        </div>
+      </div>
+
+      <!-- Assets List Section -->
+      <!-- <div hidden id="print-section"> -->
+      <div class="row card col-md-12">
+          <div class="content">
+                  <div class="row col-md-12"  >
+                    <h4 class="title">Assets List</h4>  
+                    <!-- <span> -->
+                      <a routerLink="/masterdata/assetsupload" routerLinkActive="active" class="pull-right">Upload Assets File</a> <br>
+                      <a class="pull-right" (click)="onShowHideStatistics()" [hidden]="showStatistics">Show Statistics</a>
+                      <a class="pull-right" (click)="onShowHideStatistics()" [hidden]="!showStatistics">Hide Statistics</a>
+                    <!-- </span> -->
+                  </div>
+
+
+                           <!-- Toolbar -->
+                           <form novalidate [formGroup]="searchForm"> 
+                            <div class="card col-md-12 toolbarCard backgroundCard" >
+                              <div class=" col-md-12">
+                                <div class=" col-md-4" >
+                                  <i class="pe-7s-plus toolbarIcon" (click)="onShowAddEdit()"  ></i>
+                                  <i class="pe-7s-cloud-download toolbarIcon" (click)="onExportExcel()" ></i>
+                                  <i class="pe-7s-print toolbarIcon"  printTitle="Assets-List" printSectionId="print-section" ngxPrint> </i>
+                                  <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllAssets()" ></i>   
+                                  <i class="pe-7s-trash toolbarIcon" (click)="onDeleteAllSellected()"  > </i>  
+                                </div>
+                                <div class=" col-md-2">
+                                  <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                    <option value="5">Rows</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+          
+                                    </select> 
+                                </div>
+                                <div class=" col-md-6 marginsPaging" >
+                                  <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                                </div>
+                                  <br><br>     <br>
+                              
+                              </div>
+                              <div class=" col-md-12">
+                                <div class=" col-md-2">
+                                  <select formControlName="DepartmentName" 
+                                  [ngStyle]="{'background-color': DepartmentNameIsSelected ? 'gray' : 'white'}" (change)="checkDepartmentFilterSelection($event.target.value)" 
+                                  class="form-control" data-title="Single Select" placeholder="Departments"
+                                  data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                  <option value="" >All-Departments</option>
+                                  <option *ngFor="let a of Departments" value={{a.dptName}} > {{a.dptName}} </option>
+                                </select>
+                                </div>
+                                <div class="col-md-2">
+                                  <select value="0"  formControlName="BranchName"
+                                  [ngStyle]="{'background-color': BranchNameIsSelected ? 'gray' : 'white'}" (change)="checkBranchFilterSelection($event.target.value)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                    <option value="">All-Branchs</option>
+                                    <option *ngFor="let a of Branchs" value={{a.brnName}} > {{a.brnName}} </option>
+                                  </select>
+                                </div>
+                                <div class="col-md-2">
+                                  <select value="0"  formControlName="CompanyName"  class="form-control" data-title="Single Select" 
+                                  [ngStyle]="{'background-color': CompanyNameIsSelected ? 'gray' : 'white'}" (change)="checkCompanyFilterSelection($event.target.value)"
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                    <option value="">All-Companies</option>
+                                    <option *ngFor="let a of Companys" value={{a.comName}} > {{a.comName}} </option>
+                                  </select>
+                                </div>
+                                <div class="col-md-2">
+                                  <select value="0" formControlName="AssetTypeName" 
+                                  [ngStyle]="{'background-color': AssetTypeNameIsSelected ? 'gray' : 'white'}" (change)="checkTypeFilterSelection($event.target.value)"
+                                    class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                    <option value="">All-Types</option>
+                                    <option *ngFor="let a of AssetTypes" value={{a.asttypName}} > {{a.asttypName}} </option>
+                                  </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                                </div>
+                                <div class=" col-md-2 marginsSearch ">
+                                  <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                                </div>
+                            <br><br><br>
+                              </div>
+                            </div>
+                          </form>
+
+                  <div id="print-section" class="row card col-md-12 fresh-datatables" style="overflow-x:auto;" >
+                  <!-- <div  > -->
+
+                    <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+              
+                    <thead>
+                          <tr>
+                            <th> 
+                              <div class=" form-check">
+                                <label class=" form-check-label">
+                                  <input id="assetItemALL--" (change)="onSelectAll($event)" class=" form-check-input"  type="checkbox" value="" />
+                                  <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                  </span>
+                                </label>
+                              </div>
+                             </th>
+                            <th [class.active]="order === 'astId'" (click)="setOrder('astId')">
+                              # <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astDescription'" (click)="setOrder('astDescription')"
+                              class="mdl-data-table__cell--non-numeric">
+                              Description <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                              Code <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astSerialNumber'" (click)="setOrder('astSerialNumber')" *ngIf="IsSerialNumberExist()" >
+                              Serial Number <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astPartNumber'" (click)="setOrder('astPartNumber')"  *ngIf="IsPartNumberExist()">
+                              DailNumber/SIM/Cirt <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>  
+                            <!-- <th [class.active]="order === 'astDialNumber'" (click)="setOrder('astDialNumber')" *ngIf="IsDialNumberExist()" >
+                              Dial Number <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astCircuitNumber'" (click)="setOrder('astCircuitNumber')" *ngIf="IsCircuitNumberExist()">
+                              Circuit Number <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th> -->
+                            <th [class.active]="order === 'astPurchaseDate'" (click)="setOrder('astPurchaseDate')">
+                              Purchase Date <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'asttypName'" (click)="setOrder('asttypName')">
+                              Asset Type <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+
+                            <th [class.active]="order === 'empFullName'" (click)="setOrder('empFullName')">
+                              Employee <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'dptName'" (click)="setOrder('dptName')">
+                              Department <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'brnName'" (click)="setOrder('brnName')">
+                              Branch <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'comName'" (click)="setOrder('comName')">
+                              Company <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th >
+                              Actions 
+                            </th>
+
+                          </tr>
+                    </thead>
+                    <tbody>
+                          <tr  *ngFor="let row of Assets | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                            <td>
+                              <div class="form-check">
+                                <label class=" form-check-label">
+                                  <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                  <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>{{ i+1 }}</td>
+                            <td>{{ row?.astDescription }}</td>
+                            <td>{{ row?.astCode }}</td>
+                            <td *ngIf="IsSerialNumberExist()">{{ row?.astSerialNumber }}</td> 
+                            <td *ngIf="IsPartNumberExist()">{{ row?.astPartNumber }}</td>
+                            <!-- <td *ngIf="IsDialNumberExist()">{{ row?.astDialNumber}}</td>
+                            <td *ngIf="IsCircuitNumberExist()">{{ row?.astCircuitNumber}}</td> -->
+                            <td>{{ row?.astPurchaseDate }}</td>
+                            <td>{{ row?.AssetTypeName }}</td>
+                            <td> ({{ row.empHRCode }}) {{ row?.EmployeeName }}</td>
+                            <td>{{ row?.DepartmentName }}</td>
+                            <td>{{ row?.BranchName }}</td>
+                            <td>{{ row?.CompanyName }}</td>
+                            <td>
+                              <a (click)="onGetAssetLog(row)" class="btn btn-simple btn-warning btn-icon"><i>Hist</i></a>
+                              <a (click)="onEditAsset(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                              <a (click)="onDeleteAsset(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                          </tr>
+                          <tr>
+                            <td>
+                                  <div  class="text-center" style="color: red; width: auto">
+                                    <p *ngIf="Assets.length === 0">
+                                        No Entry found
+                                    </p>
+                                  </div>
+                            </td>
+                          </tr>
+                    </tbody>
+                    </table>
+                  <!-- </div> -->
+                 </div> 
+                 <!-- endprintsection -->
+               
+                <!-- end content-->
+            <!-- </div> -->
+            <!--  end card  -->
+          
+          <!-- end col-md-12 -->
+          <div class="col-md-12">
+            <div class="col-md-1">
+              <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                <option value="5">#Rows</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+          
+                </select> 
+            </div>
+            <div class="col-md-3">
+              <pagination-controls (pageChange)="pageIndex = $event">    </pagination-controls>
+            </div>
+           </div>
+          </div>
+      </div>
+   
+    
+    </div>
+  </div>
+</div>

@@ -1,0 +1,345 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <ngx-alerts></ngx-alerts>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <div class="content" >
+        <form [formGroup]="assignForm" (ngSubmit)="onSubmit()" > 
+                <div class=" row card col-md-12">
+                  <div class="content" >
+                    <div class="row card col-md-12" style="background-color: #f9f9f9;  position: static;">
+                        <br>  
+                        <div class="col-md-4">
+                                <label>Select Employee:   {{ assignForm.controls.empFullName.value }} </label>
+                                <ngx-autocomplete
+                                    formControlName="empId"
+                                    [searchKeyword]="'EmpCode'" 
+                                    [inputId]="'searchEmployee'" 
+                                    [placeholderValue]="'Enter the Employee Name'" 
+                                    [entries]="EmployeesList" 
+                                    (selectedValue)="selectEvent($event)">
+                                </ngx-autocomplete>
+                        </div>
+                        <div class="col-md-8">
+                                <label> Select Assets </label>
+                                <ng-multiselect-dropdown #multiSelect
+                                    [placeholder]="'Enter Asset code'" 
+                                    [data]="Assets" 
+                                    [formControl]="getAssignForm.astDescription" 
+                                    [settings]="settings"
+                                    [disabled]="false"
+                                    (onFilterChange)="onFilterChange($event)"
+                                    (onDropDownClose)="onDropDownClose($event)"
+                                    (onSelect)="onItemSelect($event)" 
+                                    (onDeSelect)="onDeSelect($event)"
+                                    (onSelectAll)="onSelectAllAssets($event)"
+                                    (onDeSelectAll)="onDeSelectAll($event)"  >
+                                </ng-multiselect-dropdown>
+                        </div>
+                        <br><br>
+                    </div>
+                    <div class="row col-md-12">
+                      <!-- (click)="onSubmit('Save')"  -->
+                        <button type="submit"  class="btn btn-primary " > Assign </button>
+                        <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                        <br><br>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+                <br>       
+                <div class="row card col-md-12" >  
+                  <div class="content" >
+                      <h4 class="title"> Movement Details </h4> 
+                      <div class="row card col-md-12" style="background-color: #f9f9f9;  position: static;" >      
+                              <div class=" col-md-6">
+                                <h4> Current Assets with : {{ assignForm.controls.empFullName.value }}  </h4>
+                              </div>
+                              <div class=" col-md-6">
+                                <h4>New Assets List</h4>
+                              </div>
+                              <div class=" col-md-6">
+                                <legend></legend>
+                                    <li *ngFor="let ast of assignForm.controls.assetsCurrent.value; let i = index">
+                                        <span> {{i+1}} :</span>
+                                        <span>Code:  {{ast?.astCode}}     </span>
+                                        <span> Description: {{ast?.astDescription}}</span> 
+                                    </li>
+                              </div>
+                              <div class=" col-md-6">
+                                <legend></legend>
+                                <li *ngFor="let ast of assignForm.controls.assetsNew.value; let i = index">
+                                    <!-- <span> {{i+1}} :</span>
+                                    <span>Code:  {{ast?.astCode}}     </span>
+                                    <span> Description: {{ast?.astDescription}}</span>  -->
+                                    <span> {{ast?.astCodeDescEmp}}     </span>
+                                </li>
+                              </div>
+                      </div>
+                  </div>
+                </div>
+         
+        </form>
+
+        <!-- Assets List -->
+        <div class="row card col-md-12  " >
+          <div class="content">
+                                <br>
+                                <div class="row card col-md-12 toolbarCard" >
+                                    <div class=" col-md-2" >
+                                      <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllAssets()" ></i>
+                                      <i class="pe-7s-print toolbarIcon"  printTitle="Assets-List" printSectionId="print-section" ngxPrint ></i>     
+                                      <i class="pe-7s-cloud-download toolbarIcon"  (click)="onExportExcel()"></i>  
+                                    
+                                    </div>
+                                    <div class=" col-md-1">
+                                      <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList" class="form-control" >
+                                        <option value="5">Rows</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="9999">All</option>
+                                        </select> 
+                                    </div>
+                                    <div class=" col-md-5 marginsPaging" >
+                                      <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                      <select 
+                                        (change)="onFilterByAssetType($event)" class="form-control" data-title="Single Select" 
+                                        data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                        <option value="0"> Show All </option>
+                                        <option value="1"> Show By Employees </option>
+                                        <option *ngFor="let a of AssetTypes" value={{a.asttypId}} > {{a.asttypName}} </option>
+                                      </select>
+                                    </div>
+                                    <div class=" col-md-2 marginsSearch ">
+                                      <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                                    </div>
+                                </div>
+                                <br><br><br>
+                                <!--  Show By Assets-->
+                                <div class="content" *ngIf="!showByEmployees">
+                                  By Assets
+                                <div id="print-section"  class="row card col-md-12" style="overflow-x:auto;" >
+                                  <div class="content">
+                                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                        <thead>
+                                              <tr>
+                                                <th> 
+                                                  <div class=" form-check">
+                                                    <label class=" form-check-label">
+                                                      <input id="assetItemALL--" (change)="onSelectAllCheckboxAST($event)" class=" form-check-input"  type="checkbox" value="" />
+                                                      <span class=" form-check-sign">
+                                                        <span class=" check"> </span>
+                                                      </span>
+                                                    </label>
+                                                  </div>
+                                                </th>
+                                                <th>
+                                                  #
+                                                </th>
+                                                <th [class.active]="order === 'astId'" (click)="setOrder('id')">
+                                                  ID <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'info.astDescription'" (click)="setOrder('astDescription')"
+                                                  class="mdl-data-table__cell--non-numeric">
+                                                  Description <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                                                  Code <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astSerialNumber'" (click)="setOrder('astSerialNumber')" >
+                                                  SN <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astPartNumber'" (click)="setOrder('astPartNumber')">
+                                                  PN <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astDialNumber'" (click)="setOrder('astDialNumber')" *ngIf="IsDailNumberExist()" >
+                                                  Dial Number <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astCircuitNumber'" (click)="setOrder('astCircuitNumber')" *ngIf="IsCircuitNumberExist()">
+                                                  Circuit Number <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'astPurchaseDate'" (click)="setOrder('astPurchaseDate')">
+                                                  Purchase Date <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'AssetType'" (click)="setOrder('AssetType')">
+                                                  Asset Type <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'Employee'" (click)="setOrder('Employee')">
+                                                  Employee <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'Department'" (click)="setOrder('Department')">
+                                                  Deparment <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'Branch'" (click)="setOrder('Branch')">
+                                                  Branch <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <th [class.active]="order === 'Company'" (click)="setOrder('Company')">
+                                                  Company <span [hidden]="reverse">▼</span>
+                                                  <span [hidden]="!reverse">▲</span>
+                                                </th>
+                                                <!-- <th >
+                                                  Scrap 
+                                                </th> -->
+                                              </tr>
+                                        </thead>
+                                        <tbody>
+                                              <tr  *ngFor="let row of Assets | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                                <td>
+                                                  <div class="form-check">
+                                                    <label class=" form-check-label">
+                                                      <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelectCheckboxAST($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                                      <span class=" form-check-sign">
+                                                        <span class=" check"> </span>
+                                                      </span>
+                                                    </label>
+                                                  </div>
+                                                  <!-- <div *ngFor="let checkbox of checkboxes">
+                                                    <input type="checkbox" [(ngModel)]="checkbox.checked" [value]="checkbox.value"><span>{{checkbox.name}}</span>
+                                                </div> -->
+                        
+                                                </td>
+                                                <td>
+                                                    {{ i+1 }}
+                                                </td>
+                                                <td>{{ row?.astId }}</td>
+                                                <td>{{ row?.astDescription }}</td>
+                                                <td>{{ row?.astCode }}</td>
+                                                <td>{{ row?.astSerialNumber }}</td>
+                                                
+                                                <td>{{ row?.astPartNumber }}</td>
+                                                <td *ngIf="IsDailNumberExist()">{{ row?.astDialNumber ? row?.astDialNumber : 'N/A' }}</td>
+                                                <td *ngIf="IsCircuitNumberExist()">{{ row?.astCircuitNumber ? row?.astCircuitNumber : 'N/A' }}</td>
+                                                <td>{{ row?.astPurchaseDate }}</td>
+                                                <td>{{ row?.AssetTypeName }}</td>
+                                                <td>{{ row?.EmployeeName }}</td>
+                                                <td>{{ row?.DepartmentName }}</td>
+                                                <td>{{ row?.BranchName }}</td>
+                                                <td>{{ row?.CompanyName }}</td>
+                                                <!-- <td>
+                                                  <a (click)="onScrap(row)" class="btn btn-simple btn-warning "><i>Scrap</i></a> 
+                                                </td> -->
+                                              </tr>
+                                        </tbody>
+                                        </table>
+                                  </div>
+                                </div> 
+                                </div>
+                                <!-- end content By Assets-->
+
+                                <!--  Show By Employee-->
+                                <div class="content" *ngIf="showByEmployees">
+                                  By Employee
+                                  <div id="print-section"  class="row card col-md-12" style="overflow-x:auto;" >
+                                    <div class="content">
+                                          <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                     <thead>
+                                           <tr>
+                                             <th> 
+                                               <div class=" form-check">
+                                                 <label class=" form-check-label">
+                                                   <input id="employeeItemALL--" (change)="onSelectAllCheckboxEMP($event)" class=" form-check-input"  type="checkbox" value="" />
+                                                   <span class=" form-check-sign">
+                                                     <span class=" check"> </span>
+                                                   </span>
+                                                 </label>
+                                               </div>
+                                             </th>
+                                             <th >
+                                               # 
+                                             </th>
+                                             <th [class.active]="order === 'empHRCode'" (click)="setOrder('empHRCode')"
+                                               class="mdl-data-table__cell--non-numeric">
+                                               HR Code <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                             </th>
+                                             <th [class.active]="order === 'empFullName'" (click)="setOrder('empFullName')">
+                                              Full Name <span [hidden]="reverse">▼</span>
+                                               <span [hidden]="!reverse">▲</span>
+                                             </th>
+                                             <th>
+                                               Assets
+                                             </th>
+                                             <th [class.active]="order === 'Department'" (click)="setOrder('Department')">
+                                              Department <span [hidden]="reverse">▼</span>
+                                              <span [hidden]="!reverse">▲</span>
+                                            </th>
+                                             <th [class.active]="order === 'Branch'" (click)="setOrder('Branch')">
+                                               Branch <span [hidden]="reverse">▼</span>
+                                               <span [hidden]="!reverse">▲</span>
+                                             </th>
+                                             <th [class.active]="order === 'Company'" (click)="setOrder('Company')">
+                                               Company <span [hidden]="reverse">▼</span>
+                                               <span [hidden]="!reverse">▲</span>
+                                             </th>
+                                           </tr>
+                                     </thead>
+                                     <tbody>
+                                           <tr *ngFor="let row of Employees | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                             <td>
+                                               <div class="form-check">
+                                                 <label class=" form-check-label">
+                                                   <input id="employeeItem--{{i}}" class=" form-check-input" (change)="onSelectCheckboxEMP($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                                   <span class=" form-check-sign">
+                                                     <span class="check"> </span>
+                                                   </span>
+                                                 </label>
+                                               </div>                     
+                                             </td>
+                                             <td>{{ i+1 }}</td>
+                                             <td>{{ row?.empHRCode }}</td>
+                                             <td>{{ row?.empFullName }}</td>
+                                             <td>
+                                                 <ul>
+                                                      <li *ngFor="let ast of row.assetsCurrent; let i = index">
+                                                        <span>( {{ast?.astCode}}  )  </span>
+                                                        <span>  {{ast?.AssetType}}  - </span>
+                                                        <span>  {{ast?.astDescription}}</span> 
+                                                      </li>
+                                                 </ul>
+                                             </td>
+                                             <td>{{ row?.Department }}</td>
+                                             <td>{{ row?.Branch }}</td>
+                                             <td>{{ row?.Company }}</td>
+                                           </tr>
+                                     </tbody>
+                                     </table>
+                                   </div>
+                                  </div> 
+                                </div>
+                                <!-- end content By Employee-->
+           
+                                <div class="col-md-12">
+                                  <div class="col-md-1">
+                                    <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                                      <option value="5">#Rows</option>
+                                      <option value="5">5</option>
+                                      <option value="10">10</option>
+                                      <option value="25">25</option>
+                                      <option value="50">50</option>
+                                      <option value="100">100</option>
+                                      <option value="9999">All</option>
+                                      </select> 
+                                  </div>
+                                  <div class="col-md-3">
+                                    <pagination-controls (pageChange)="pageIndex = $event">    </pagination-controls>
+                                  </div>
+                                </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<p>testautocomplete works!</p>
+
+
+<h3 style="text-align: center">{{title}}</h3>
+
+<div style="width: 50%;position: absolute;left: 25%;top: 12%">
+  <ngx-autocomplete [searchKeyword]="'name'" [inputId]="'searchEmployee'"
+    [placeholderValue]="'Enter the Employee Name'" [entries]="employees" (selectedValue)="selectEvent($event)">
+  </ngx-autocomplete>
+</div>
+
+<div style="margin-top: 50%; font-weight: bold">
+    Selected Employee: {{ selected_employee}}
+</div>

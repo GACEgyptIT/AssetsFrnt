@@ -1,0 +1,24 @@
+29	/operation/invoices	
+30	/operation/invoices	
+31	/operation/emailmng
+17	/operation/testlogin	
+18	/operation/assetmng
+12	/users/user	
+13	/users/roles	
+14	/users/privilege	
+9	/masterdata/assets	
+11	/masterdata/assetsupload	
+19	/masterdata/employee	
+21	/masterdata/employeeimport	
+22	/masterdata/assettype	
+23	/masterdata/branch	
+24	/masterdata/company	
+25	/masterdata/domain
+25	/masterdata/supplier	
+26	/masterdata/genaricemail	
+27	/masterdata/position	
+28	/masterdata/department	
+
+
+
+Attaching an entity of type 'IntranetAPI.Models.RolePrivilege' failed because another entity of the same type already has the same primary key value. This can happen when using the 'Attach' method or setting the state of an entity to 'Unchanged' or 'Modified' if any entities in the graph have conflicting key values. This may be because some entities are new and have not yet received database-generated key values. In this case use the 'Add' method or the 'Added' entity state to track the graph and then set the state of non-new entities to 'Unchanged' or 'Modified' as appropriate.

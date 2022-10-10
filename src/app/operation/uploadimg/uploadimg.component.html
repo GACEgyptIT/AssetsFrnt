@@ -1,0 +1,277 @@
+<!-- <div class="main-content">
+    <div class="container-fluid"  >
+
+
+
+        <ngx-alerts></ngx-alerts>
+
+        <div class="row" >
+                <div class="card">
+                     <form #f="ngForm" novalidate >
+                        <div class="content" >
+                          <h5 class=" card-title">  Assets Excel Upload </h5>
+                          <div class="col-md-4">
+                            <input class="form-control col-md-6" type="file" #fileInput />
+                          </div>
+                          <div class="col-md-2">
+                            <button class="btn btn-primary" (click)="uploadFile()">Upload</button>
+                          </div>
+      
+                          </div>
+                            <div class="footer">
+                                <br> 
+                                The uploaded Assets will remain in hereunder list until you save it to the existing assets (Is Exist) column shows the status.  <a href="#" (click)="download()">Download Sample (Assets File)</a>
+                                <br>       <a routerLink="/masterdata/assets" routerLinkActive="active">Back to Assets List</a>
+                            </div>
+                            <div [hidden]="!loading" > 
+                              <img src="../../../../assets/animatedImg/loadingShip.gif" alt="Moving Ship" />
+                            </div>
+                     
+                    </form>
+               </div>    
+        </div>
+ 
+        <div class="row"  [hidden]="!showStatistics">
+                            
+                                  <div class="card">
+                                    <br>
+                                    <a class="pull-right" (click)="onShowHideStatistics()" [hidden]="!showStatistics">Hide Statistics</a>
+                                                
+                                                <legend>   <h4 class="title"> Uploaded Assets Statistics</h4>   </legend>
+                                
+                                                <div class="col-md-3">
+                                                Selected:  <span style="color: black;">  {{selectedAssets}} </span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                New Assets :  <span style="color: green;">  {{isNew}} </span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                Already Exist: <span  style="color: red;">  {{ isExist }} </span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                Total Uploaded: <span>  {{upLoadedAssets}} </span>
+                                                </div>
+                                              <br>
+                                        
+                                          <br>
+                                            <div class="col-md-3">
+                                              Asset Code Duplicated: <span  style="color: red;"> {{ isDuplicated }} </span> 
+                                            </div>
+                                            <div class="col-md-3">
+                                              No AssetCode:  <span  style="color: red;">  {{noAssetCode}} </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                              No AssetTypeCode :   <span  style="color: red;">  {{noAssetTypeCode}} </span>
+                                            
+                                            </div>
+                                            <div class="col-md-3">
+                                              No Hr Code: <span  style="color: red;">  {{ noHrCode }} </span> 
+                                            </div>
+                                          <br>
+                                          <br>
+                                            <div class="col-md-3">
+                                              No Branch:   <span  style="color: red;">  {{noBranch}} </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                              No Company :  <span  style="color: red;">   {{noCompany}} </span>
+                                            </div>
+                                            <div class="col-md-3">
+                                            -----
+                                            </div>
+                                            <div class="col-md-3">
+                                            -----
+                                            </div>
+                                      <br>
+                                  </div>
+                              
+        </div>
+ 
+        <div class="row" [hidden]="!showCodeGuide"  >
+                                  <div class="card">
+                                    <div class="content">
+                                      <a class="pull-right" (click)="onShowHideCodeGuide()" [hidden]="!showCodeGuide">Hide Code Guide</a>
+                                          <app-codeguide></app-codeguide>
+                                    </div>
+                                  </div> 
+        </div>
+
+
+
+
+
+        <div class="row" >
+            <div class="card">
+            
+               
+               
+        
+                             <div class="col-md-12 toolbarCard" >
+                                <div class=" col-md-4" >
+                                  <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllAssets()" ></i>
+                                  <i class="pe-7s-diskette toolbarIcon" (click)="onSaveToAssetsList()" ></i>     
+                                  <i class="pe-7s-trash toolbarIcon" (click)="onDeleteAllSellected()" ></i>  
+                               
+                                </div>
+                                <div class=" col-md-1">
+                                  <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList" >
+                                    <option value="5">Rows</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="9999">All</option>
+                                    </select> 
+                                </div>
+                                <div class=" col-md-5 marginsPaging" >
+                                  <pagination-controls  (pageChange)="pageIndex = $event"  > </pagination-controls>
+            
+                                </div>
+                                <div class=" col-md-1  marginsSearch ">
+                                  <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="marginsSearch" >       
+                                </div>
+                             </div>
+            </div> -->
+<!--       
+        <div class="card">
+
+    
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+            <div id="print-section"  >
+                    <div class="fresh-datatables" style="overflow-x:auto;" >
+                        <table responsive id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <thead>
+                            <tr>
+                            <th> 
+                                <div class=" form-check">
+                                <label class=" form-check-label">
+                                    <input id="assetItemALL--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                    <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                    </span>
+                                </label>
+                                </div>
+                            </th>
+                            <th> #</th>
+                            <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                                Code <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astDescription'" (click)="setOrder('astDescription')" *ngIf="IsDescriptionExist()" 
+                                class="mdl-data-table__cell--non-numeric">
+                                Description <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+
+                            <th [class.active]="order === 'SerialNumber'" (click)="setOrder('SerialNumber')" *ngIf="IsSerialNumberExist()">
+                                SN <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'PartNumber'" (click)="setOrder('PartNumber')" *ngIf="IsPartNumberExist()">
+                                PN <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'DialNumber'" (click)="setOrder('DialNumber')"  *ngIf="IsDialNumberExist()"  >
+                                Dail Number <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'CircuitNumber'" (click)="setOrder('CircuitNumber')" *ngIf="IsCircuitNumberExist()">
+                                CircuitNumber <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'TypeCode'" (click)="setOrder('TypeCode')" *ngIf="IsTypeCodeExist()">
+                                Type Code <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'TypeName'" (click)="setOrder('TypeName')" *ngIf="IsTypeNameExist()">
+                                Type Name <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'EmpHRCode'" (click)="setOrder('EmpHRCode')" *ngIf="IsEmpHRCodeExist()">
+                                Emp HR Code<span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'EmpName'" (click)="setOrder('EmpName')" *ngIf="IsEmpNameExist()">
+                                Emp Name <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'CompanyCode'" (click)="setOrder('CompanyCode')" *ngIf="IsCompanyCodeExist()">
+                                CompanyCode <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'CompanyName'" (click)="setOrder('CompanyName')" *ngIf="IsCompanyNameExist()">
+                                Company Name <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>  
+                            <th [class.active]="order === 'BranchCode'" (click)="setOrder('BranchCode')" *ngIf="IsBranchCodeExist()">
+                                Branch Code <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'BranchName'" (click)="setOrder('BranchName')" *ngIf="IsBranchNameExist()">
+                                Branch Name <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'IsExist'" (click)="setOrder('IsExist')">
+                                Is Exist <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  *ngFor="let row of Assets | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                            <td>
+                                <div class="form-check">
+                                <label class=" form-check-label">
+                                    <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row)" 
+                                    [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                    <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                    </span>
+                                </label>
+                                </div>
+                            </td>
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td [ngStyle]="{'color': row?.duplicatCode? 'red' : 'black'}">
+                                {{ row?.AssetCode }}  
+                                <span *ngIf="row?.duplicatCode == true" style="color: red;"  >  duplicated  </span>
+                                <span *ngIf="row?.AssetCode == ''" style="color: red;"  >  missed  </span>
+                            </td>
+                            <td *ngIf="IsDescriptionExist()" >{{ row?.Description }}</td>
+
+                            <td *ngIf="IsSerialNumberExist()" >{{ row?.SerialNumber }}</td>
+                            <td *ngIf="IsPartNumberExist()" >{{ row?.PartNumber }}</td>
+                            <td *ngIf="IsDialNumberExist()" >{{ row?.DialNumber }}</td>
+                            <td *ngIf="IsCircuitNumberExist()" >{{ row?.CircuitNumber }}</td>
+
+                            <td *ngIf="IsTypeCodeExist()" [ngStyle]="{'color': row?.TypeCode? 'black' : 'red'}">{{ row?.TypeCode ? row?.TypeCode : 'missed' }}</td>  
+                            <td *ngIf="IsTypeNameExist()" [ngStyle]="{'color': row?.TypeName? 'black' : 'red'}">{{ row?.TypeName ? row?.TypeName : 'missed' }}</td> 
+                            <td *ngIf="IsEmpHRCodeExist()" [ngStyle]="{'color': row?.EmpHRCode? 'black' : 'red'}">{{ row?.EmpHRCode ? row?.EmpHRCode : 'missed' }}</td> 
+                            <td *ngIf="IsEmpNameExist()" [ngStyle]="{'color': row?.EmpName? 'black' : 'red'}">{{ row?.EmpName ? row?.EmpName : 'missed' }}</td> 
+                            <td *ngIf="IsCompanyCodeExist()" [ngStyle]="{'color': row?.CompanyCode? 'black' : 'red'}">{{ row?.CompanyCode ? row?.CompanyCode : 'missed' }}</td>  
+                            <td *ngIf="IsCompanyNameExist()" [ngStyle]="{'color': row?.CompanyName? 'black' : 'red'}">{{ row?.CompanyName ? row?.CompanyName : 'missed' }}</td>  
+                            <td *ngIf="IsBranchCodeExist()" [ngStyle]="{'color': row?.BranchCode? 'black' : 'red'}">{{ row?.BranchCode ? row?.BranchCode : 'missed' }}</td>  
+                            <td *ngIf="IsBranchNameExist()" [ngStyle]="{'color': row?.BranchName? 'black' : 'red'}">{{ row?.BranchName ? row?.BranchName : 'missed' }}</td> 
+                            <td>
+                                <span *ngIf="row?.IsExist == true" style="color: red;"  >  Is Exist  </span>
+                                <span *ngIf="row?.IsExist == false" style="color: green;"  >  New  </span>
+                            </td> 
+                  </tr>
+                        </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+        </div> -->
+
+
+
+

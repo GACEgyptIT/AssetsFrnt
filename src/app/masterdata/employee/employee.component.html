@@ -1,0 +1,641 @@
+<div class="main-content">
+  <ngx-alerts></ngx-alerts>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+
+  <div class="container-fluid">
+            <!-- Add-Edit Section -->
+            <div class="row" [hidden]="getEmployeeId.value === null"   >
+            <div class="card  col-md-12" >
+                <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" >
+                  <div class="content">
+                    <h4>  Add/Edit Employee : (  {{ getCode.value }}     )  
+                      <span [ngStyle]="{'color': IsEmployeeActive ? 'black' : 'red'}" >   <input id="EmployeeActive" (click)="onActivate($event)"  class=" form-check-input"  type="checkbox" checked="checked" value="checked" />  Active  </span>
+                    </h4> 
+                          <!-- Employee Profile-->
+                          <div class="row card backgroundCard col-md-12" >
+                                    <br>
+                                    <div class="form-group col-md-2">
+                                        <div class="col-md-2">
+                                            <img [src]="getEmpImg.value || '../../../assets/img/profile/ProfilePhoto.png'" [width]="65" [height]="90" class="img-rounded" >
+                                        </div>
+                                        <div>
+                                            <input id="custom-input" type="file" (change)="onChangeChangeProfileImg($event)">
+                                        </div>
+                                    </div>
+                                    <div class=" form-group col-md-12">
+                                                <div class="form-group col-md-3">
+                                                              <label class="control-label" for="">First Name:
+                                                                <!-- <span class="star">*</span> -->
+                                                                </label> 
+                                                                <input type="text" placeholder="First Name" formControlName="empFirstName" (keyup)="onFillFullName()" class="form-control" >
+                                                                <!-- <small [hidden]="employeeForm.controls.empFirstName.valid || employeeForm.controls.empFirstName.pristine" class="text-danger">
+                                                                  First Name is required.
+                                                                </small> -->
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                            <label class="control-label" for="">Second Name:
+                                                              <!-- <span class="star">*</span> -->
+                                                              </label>
+                                                              <input type="text" placeholder="Second Name" formControlName="empSecondName" (keyup)="onFillFullName()" class="form-control" >
+                                                              <!-- <small [hidden]="employeeForm.controls.empSecondName.valid || employeeForm.controls.empSecondName.pristine" class="text-danger">
+                                                                Second Name is required.
+                                                              </small> -->
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                            Last
+                                                            <label class="control-label" for="">Last Name:
+                                                              <!-- <span class="star">*</span> -->
+                                                              </label>
+                                                              <input type="text" placeholder="Last Name" formControlName="empLastName" (keyup)="onFillFullName()" class="form-control" >
+                                                              <!-- <small [hidden]="employeeForm.controls.empLastName.valid || employeeForm.controls.empLastName.pristine" class="text-danger">
+                                                                Last Name is required.
+                                                              </small> -->
+                                                </div> 
+                                    </div>
+                                    <div class=" form-group col-md-12">
+                                                <div class="form-group col-md-6">
+                                                  <label class="control-label" for="">Full Name:
+                                                    <span class="star">*</span>
+                                                    </label>
+                                                    <input type="text" placeholder="FirstName  SecondName  LastName" required formControlName="empFullName" class="form-control" >
+                                                    <small [hidden]="employeeForm.controls.empFullName.valid || employeeForm.controls.empFullName.pristine" class="text-danger">
+                                                      Full Name is required.
+                                                    </small>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                  <label class="control-label" for="">AD Account :
+                                                    <!-- <span class="star">*</span> -->
+                                                    </label>
+                                                    <input type="text" placeholder="AD Account Name" formControlName="accountName" class="form-control" >
+                                                    <!-- <small [hidden]="employeeForm.controls.accountName.valid || employeeForm.controls.accountName.pristine" class="text-danger">
+                                                      Account Name is required.
+                                                    </small> -->
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                  <label class="control-label" for="">Gender:
+                                                    <!-- <span class="star">*</span> -->
+                                                </label>
+                                                <select  (change)="onChangeEmpGender($event)" value="Male" class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                                  <option value="Male">Male</option>
+                                                  <option value="Female">Female</option>
+                                                </select> 
+                                                
+                                                </div>
+                                    </div>
+                                    <div class=" form-group col-md-12">
+      
+                                          <div class="form-group col-md-2">
+                                              <label  for="" class="control-label">HR Code:
+                                                  <span class="star">*</span>   
+                                              </label> 
+                                               <!-- {{ employeeForm.get('empId').value | json}} -->
+                                              <input type="text" placeholder="XXXX 4 Digits  " (keyup)="IsHRCodeExist($event)"  class="form-control" formControlName="empHRCode" required>
+                                             
+                                              <small  *ngIf="CodePatternNotValid" class="text-danger">
+                                                - Code Format 4 Digits: XXXX   <br>
+                                              </small>
+                                              <small *ngIf="CodeExist" class="text-danger">
+                                                - Code already used.
+                                              </small>
+                                              <small [hidden]="CodeExist || employeeForm.controls.empHRCode.status == 'INVALID' " style="color: green;">
+                                                - Code is valid.
+                                              </small>
+                                        
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                              <label class="control-label" for="">Address:
+                                                <!-- <span class="star">*</span> -->
+                                                </label>
+                                                <input type="text" placeholder="Employee Full Name" formControlName="empAddress" class="form-control" >
+                                                <!-- <small [hidden]="employeeForm.controls.empAddress.valid || employeeForm.controls.empAddress.pristine" class="text-danger">
+                                                  Address is required.
+                                                </small> -->
+                                          </div>
+                                          <div class="form-group col-md-2">
+
+                                              <label class="control-label" for="">Birthday Date:
+                                                  <!-- <span class="star">*</span> --> 
+                                              </label> <span> {{ employeeForm.value.empBirhtday | json }}</span>
+                                              <div class="form-group">
+                                                <input
+                                                formControlName="empBirhtday"
+                                                class="form-control"
+                                                #datepickerYMD="bsDatepicker"
+                                                bsDatepicker
+                                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD HH:mm' }">
+                                                <!-- <input formControlName="empBirhtday" type="text" class="form-control datepicker" placeholder="Date Picker Here"/> -->
+                                              </div> 
+                                              <!-- <small [hidden]="employeeForm.controls.Birthday.valid || employeeForm.controls.Birthday.pristine " class="text-danger">
+                                                    PR Date is required.
+                                              </small> -->
+                                          </div>
+                                    </div>
+                                    <div class=" form-group col-md-12">
+                                          <div class="form-group col-md-2" >
+                                            <label class="control-label" for="">Company:
+                                              <!-- <span class="star">*</span> -->
+                                          </label>
+                                          <select   (change)="onChangeCompanyId($event)"  value="0"  formControlName="comId"
+                                          class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                          <option value="0" >--Select--</option>
+                                            <option *ngFor="let com of Companys" value={{com.comId}} >   {{com.comName}}</option>
+                                          </select> 
+                                          <!-- <small [hidden]="employeeForm.controls.posId.valid || employeeForm.controls.posId.pristine" class="text-danger">
+                                            Company is required.
+                                          </small> -->
+                                          
+                                          </div>
+                                          <div class="form-group col-md-2">
+                
+                                            <label class="control-label" for="">Department:
+                                              <span class="star">*</span>
+                                          </label>
+                                          <select  (change)="onChangeDepartmentId($event)"  value="0"   formControlName="dptId" required
+                                          class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option value="0" >--Select--</option>
+                                            <option *ngFor="let dpt of Departments" value={{dpt.dptId}} >   {{dpt.dptName}}   </option>
+                                          </select> 
+                                          <small [hidden]="employeeForm.controls.dptId.valid || employeeForm.controls.dptId.pristine" class="text-danger">
+                                            Department is required.
+                                          </small>
+                                          </div>
+                                          <div class="form-group col-md-2">
+                        
+                                            <label class="control-label" for="">Branch:
+                                              <!-- <span class="star">*</span> -->
+                                          </label>
+                                          <select   (change)="onChangeBranchId($event)"  value="0"   formControlName="brnId"  
+                                          class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option value="0" >--Select--</option>
+                                            <option *ngFor="let brn of Branchs" value={{brn.brnId}} >
+                                                {{brn.brnName}}
+                                            </option>
+                        
+                                          </select> 
+                                          <!-- <small [hidden]="employeeForm.controls.brnId.valid || employeeForm.controls.brnId.pristine" class="text-danger">
+                                            Branch is required.
+                                          </small> -->
+                                          </div>                          
+                                          <div class="form-group col-md-2">
+                  
+                                              <label class="control-label" for="">Direct Manager: <span style="color: green;" *ngIf="getDirectMngId.value"> {{ getdirectMngName.value }} </span> 
+                                              </label>
+                                         
+                                              <ngx-autocomplete
+                                                  formControlName="directMngId" 
+                                                  [searchKeyword]="'empFullName'"
+                                                  [inputId]="'searchEmployee'" 
+                                                  [placeholderValue]="'Enter Direct Manager Name'" 
+                                                  [entries]="EmployeesList" 
+                                                
+                                                  (selectedValue)="selectDirectMngEvent($event)">
+                                              </ngx-autocomplete>
+                                              <!-- <small [hidden]="!emailIsTaken1" class="text-danger">
+                                                This Email is duplicate .
+                                              </small>  -->
+                        
+                                          </div>
+                                          <div class="form-group col-md-2">
+                                            <label class="control-label" for="">Position:
+                                              <!-- <span class="star">*</span> -->
+                                          </label>
+                                          <select (change)="onChangePositionId($event)" value="0" formControlName="posId" 
+                                          class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                            <option value="0" >--Select--</option>
+                                            <option *ngFor="let pos of Positions" value={{pos.posId}} >
+                                                {{pos.posTitle}}
+                                            </option>
+                        
+                                          </select> 
+                                          <!-- <small [hidden]="employeeForm.controls.posId.valid || employeeForm.controls.posId.pristine" class="text-danger">
+                                            Position is required.
+                                          </small> -->
+                                        
+                                          </div>
+                                    </div>
+                                    <div class=" form-group col-md-12">
+                                      <div class="form-group col-md-2" >
+                                        <label class="control-label" for="">Office Ext:
+                                      </label>
+                                      <input type="text" placeholder="Office Extention" formControlName="empExt" class="form-control" >                     
+                                      </div>
+                                      <div class="form-group col-md-2" >
+                                        <label class="control-label" for="">Office Pri:
+                                      </label>
+                                      <input type="text" placeholder="Office Pri" formControlName="empPri" class="form-control" >                     
+                                      </div>
+                                      <div class="form-group col-md-2">
+                                        <label class="control-label" for="">Mobile 1:
+                                      </label>
+                                      <input type="text" placeholder="Mobile 1" formControlName="empMobile0" class="form-control" >                      
+                                      </div>
+                                      <div class="form-group col-md-2">
+                                        <label class="control-label" for="">Mobile 2:
+                                      </label>
+                                      <input type="text" placeholder="Mobile 2" formControlName="empMobile1" class="form-control" >                       
+                                      </div>                          
+                                      <div class="form-group col-md-2">
+                                          <label class="control-label" for="">Mobile 3: 
+                                          </label>
+                                          <input type="text" placeholder="Mobile 3" formControlName="empMobile2" class="form-control" >
+                                      </div>
+                                    </div>
+                                    <div class="row form-group col-md-12">
+                                            <div class="form-group col-md-2">
+                                              <div class=" form-check">
+                                                <label class=" form-check-label">
+                                                  <input id="mailCheckBox"   formControlName="mailCheckBox" (click)="setEmails($event)"  class=" form-check-input"  type="checkbox" value="" />
+                                                  <span class=" form-check-sign">
+                                                    <span class=" check"> Show Emails </span>
+                                                    <!-- {{employeeForm.value | json}} -->
+                                                  </span>
+                                                </label>
+                                         
+                                            </div>
+                                            </div>
+                                    </div>
+                          </div>
+                          <!-- Email Section -->
+                          <div class="row card backgroundCard col-md-12" [hidden]="!getEmailCheckBox.value" >
+                            <br>
+                            <legend>  
+                                  Email Details:                        
+                            </legend>
+                            <!-- Individual -->
+                            <div class="col-md-3" >
+                              <select class="form-control"  (change)="onAddIndividualEmail(employeeForm.controls.emailsINDIV, 'onAdd', $event)"   data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue" [value]="0">
+                                <option value="0" selected="true">-- Add Individual Email --</option>
+                                <option *ngFor="let dom of Domains" value={{dom.domId}} >   {{dom.domName}}</option>
+                              </select> 
+                            </div>
+                            <div formArrayName="emailsINDIV" class="col-md-12">
+                                  <div *ngFor="let mail of getIndividualEmailsForm?.controls; let i = index" >
+                                  <div [formGroupName]="i" class="col-md-3" >
+                                      <label> Individulal {{i+1 }} : <a (click)="deleteIndividualEmail(i)" routerLink="active" style="color: crimson;" >   X </a>   </label>
+                                      <input  formControlName="emailAddress" required type="email" class="form-control" placeholder="Email Address"  />  
+                                     
+                                      <small [hidden]="getIndividualEmailsForm.controls[i].get('emailAddress').valid  " class="text-danger">
+                                          Use Email Format as myname@mydomain.com
+                                      </small>
+                                      <br>
+                                    </div>
+                              </div>
+                            </div>
+                            <!-- Archive -->
+                            <div formArrayName="emailsARCH" class="col-md-12">
+                              <legend></legend>
+                              <a  (click)="onAddArchiveEmail(getArchiveEmailsForm, getEmpArchivesForm , 'onAdd')" routerLinkActive="active" >Add Archive Email</a><br>
+                            <div *ngFor="let arch of getArchiveEmailsForm.controls; let i = index" >
+                              <div [formGroupName]="i" class="col-md-5" >
+                                  <label *ngIf="arch.value.archName != null" > Archive {{i+1 }} :   {{ arch.value.archName | json }}       </label> 
+                                  <label *ngIf="arch.value.archName == null" > Archive {{i+1 }} :   No Email Selected     </label> 
+                                  <ngx-autocomplete
+                                        [formControlName]="'ADArchiveAccountId'"
+                                        [searchKeyword]="'archName'" 
+                                        [inputId]="'searchArchEmail'" 
+                                        [placeholderValue]="'Enter Archive Email'" 
+                                        [entries]="ArchiveEmails" 
+                                        (selectedValue)="onSelectArchiveEmail(i, $event)"
+                                  >
+                                  </ngx-autocomplete>
+                                  <a (click)="deleteArchiveEmail(i)" routerLink="active" style="color: crimson;" > X </a> 
+                              </div>
+                            </div>
+                            </div>
+                            <!-- Genaric -->
+                            <div formArrayName="emailsGEN" class="col-md-12">
+                              <legend></legend>
+                              <a  (click)="onAddGenaricEmail(getGenaricEmailsForm, getEmpGmailsForm , 'onAdd')" routerLinkActive="active" >Add Genaric Email</a><br>
+                            <div *ngFor="let mail of getGenaricEmailsForm.controls; let i = index" >
+                              <div [formGroupName]="i" class="col-md-5" >
+                                  <label *ngIf="mail.value.genEmailAddress != null" > Genaeic {{i+1 }} :   {{ mail.value.genEmailAddress | json }}       </label> 
+                                  <label *ngIf="mail.value.genEmailAddress == null" > Genaeic {{i+1 }} :   No Email Selected     </label> 
+                                  <ngx-autocomplete
+                                        [formControlName]="'genEmailId'"
+                                        [searchKeyword]="'genEmailAddress'" 
+                                        [inputId]="'searchGmail'" 
+                                        [placeholderValue]="'Enter Genaric Email'" 
+                                        [entries]="Gemails" 
+                                        (selectedValue)="onSelectGenaricEmail(i, $event)"
+                                  >
+                                  </ngx-autocomplete>
+                                  <a (click)="deleteGenaricEmail(i)" routerLink="active" style="color: crimson;" > X </a> 
+                              </div>
+                            </div>
+                            </div>
+                            </div>
+                          <!-- Footer -->
+                          <div class="row footer col-md-12">
+                            <!-- [disabled]="employeeForm.status == 'INVALID' " -->
+                            <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('AddAndClose')" *ngIf="getEmployeeId.value == 0" [disabled]="employeeForm.status == 'INVALID' " > Add & Colse </button>
+                            <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('AddAndAddAnother')" *ngIf="getEmployeeId.value == 0" [disabled]="employeeForm.status == 'INVALID' "> Add & Add Another </button>
+                            <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('Save')" *ngIf="getEmployeeId.value > 0" [disabled]="employeeForm.status == 'INVALID' "> Save </button>
+                            <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                               <!-- Form is: {{ employeeForm.value | json }} -->
+                          </div>
+                  </div>
+                </form>
+            </div>
+            </div>
+            <!-- Statistics -->
+            <div class="row card col-md-12" >
+                <div class="content ">
+    
+                  <a routerLink="/masterdata/employeeimport" routerLinkActive="active">Import Employees From AD</a>
+                  <br> 
+                  <a routerLink="/masterdata/uploademployee" routerLinkActive="active">Upload Employees Excel</a>
+                  <br>
+                  <a routerLink="/masterdata/showadaccounts" routerLinkActive="active">Show AD Accounts</a>
+                  <br>
+                  <a (click)="onUpdateFromHRMS()"  routerLinkActive="active">Update From HRMS</a>
+   
+                </div>
+            </div>
+
+            <!-- Employees List Section -->
+            <div class="row card col-md-12" >
+              <div class="content">
+              <br>
+              <h4 class="title">Employees List</h4>
+
+                      <!-- Toolbar -->
+                      <form novalidate [formGroup]="searchForm"> 
+                        <div class="card col-md-12 toolbarCard backgroundCard" >
+                          <div class=" col-md-12">
+                            <div class=" col-md-4" >
+                              <i class="pe-7s-add-user toolbarIcon" (click)="onShowAddEdit()"  ></i>    
+                              <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllEmployees()" ></i>   
+                              <i class="pe-7s-trash toolbarIcon" (click)="onDeleteAllSellected()" ></i>  
+                              <i class="pe-7s-cloud-download toolbarIcon"  (click)="onExportExcel()"  ></i>  
+                           </div>
+                            <div class=" col-md-2">
+                              <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                <option value="5">Rows</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                    
+                                </select> 
+                            </div>
+                            <div class=" col-md-6 marginsPaging" >
+                              <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                            </div>
+                            <br>
+                          </div>
+                          <div class=" col-md-12">
+                            <div class=" col-md-2">
+                              <select formControlName="DepartmentName" [ngStyle]="{'background-color': searchForm.controls.DepartmentName.value ? 'gray' : 'white'}"
+                              class="form-control" data-title="Single Select" placeholder="Departments"
+                              data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="" >All-Departments</option>
+                              <option *ngFor="let a of Departments" value={{a.dptName}} > {{a.dptName}} </option>
+                            </select>
+                            </div>
+                            <div class="col-md-2">
+                              <select value="0"  formControlName="BranchName"   [ngStyle]="{'background-color': searchForm.controls.BranchName.value ? 'gray' : 'white'}"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                <option value="">All-Branchs</option>
+                                <option *ngFor="let a of Branchs" value={{a.brnName}} > {{a.brnName}} </option>
+                              </select>
+                            </div>
+                            <div class="col-md-2">
+                              <select value="0"  formControlName="CompanyName"  [ngStyle]="{'background-color': searchForm.controls.CompanyName.value ? 'gray' : 'white'}"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                <option value="">All-Companies</option>
+                                <option *ngFor="let a of Companys" value={{a.comName}} > {{a.comName}} </option>
+                              </select>
+                            </div>
+                 
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                            </div>
+                            <div class=" col-md-2 marginsSearch ">
+                              <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                        <div id="print-section" class="row card col-md-12 " style="overflow-x:auto;"  >
+                            <div class="content">
+                                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <!-- Table Headers -->
+                                            <thead>
+                                                  <tr>
+                                                    <th> 
+                                                      <div class=" form-check">
+                                                        <label class=" form-check-label">
+                                                          <input id="assetItemALL--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                                          <span class=" form-check-sign">
+                                                            <span class=" check"> </span>
+                                                          </span>
+                                                        </label>
+                                                      </div>
+                                                    </th>
+                                                    <th>
+                                                      #
+                                                    </th>
+                                                    <th>
+                                                      Pic
+                                                    </th>
+                                                    <th [class.active]="order === 'empHRCode'" (click)="setOrder('empHRCode')"
+                                                      class="mdl-data-table__cell--non-numeric">
+                                                      Code <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'empFullName'" (click)="setOrder('empFullName')">
+                                                      Full Name <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'accountName'" (click)="setOrder('accountName')">
+                                                      Account Name <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'PositionTitle?.posTitle'" (click)="setOrder('PositionTitle?.posTitle')" >
+                                                      Position <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'empindividualEmail1'" (click)="setOrder('empindividualEmail1')">
+                                                      Assets <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'GenaricEmail1?.genEmailAddress'" (click)="setOrder('GenaricEmail1?.genEmailAddress')"  >
+                                                      Department  <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'GenaricEmail1?.archName'" (click)="setOrder('GenaricEmail1?.archName')"  >
+                                                      Branch  <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'GenaricEmail1?.archName'" (click)="setOrder('GenaricEmail1?.archName')"  >
+                                                      Company  <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th >
+                                                      Actions 
+                                                    </th>
+                                                  </tr>
+                                            </thead>
+                                            <!-- Table Body -->
+                                            <tbody *ngIf="Employees.length == 0" ><tr  [ngStyle]="{'color': 'red'}" style="text-align:center;"> No Enties Found</tr></tbody>
+                                            <tbody *ngIf="Employees.length > 0" >
+                                                  <tr  *ngFor="let row of Employees | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                                    <td>
+                                                      <div class="form-check">
+                                                        <label class=" form-check-label">
+                                                          <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                                          <span class=" form-check-sign">
+                                                            <span class=" check"> </span>
+                                                          </span>
+                                                        </label>
+                                                      </div>
+                                                      <!-- <div *ngFor="let checkbox of checkboxes">
+                                                        <input type="checkbox" [(ngModel)]="checkbox.checked" [value]="checkbox.value"><span>{{checkbox.name}}</span>
+                                                    </div> -->
+                            
+                                                    </td>
+                                                    <td>
+                                                      {{ i+1 }}
+                                                    </td>
+                                                    <td>
+                                                        <img [src]="row.EmpImg" width="25" class="img-rounded" >   
+                                                    </td>
+                                                    <td>{{ row?.empHRCode }}</td>
+                                                    <td>{{ row?.empFullName }}</td>  
+                                                    <td>{{ row?.accountName }}</td> 
+                                                    <td>{{ row?.Position }}</td>
+                                                    <td >
+                                                      <span *ngIf="row.assetsCurrent?.length == 0">No Assets</span>
+                                                      <ul *ngFor="let ast of row.assetsCurrent" >
+                                                       
+                                                        <li *ngIf="ast != ''" > ( {{ast.astCode}} ) {{ ast.astDescription}}  </li>
+                                                      </ul>
+                                                     
+                                                    </td>
+                                                    <td >
+                                                       {{ row.DepartmentName }} 
+                                                    </td>
+                                                    <td >
+                                                      {{ row.BranchName }} 
+                                                    </td>
+                                                    <td >
+                                                      {{ row.CompanyName }} 
+                                                    </td>
+                                                    <td>
+                                                      <!-- <a (click)="onRegisterEmployee(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="pe-7s-add-user"></i></a> -->
+                                                      <div id="toPrint" class="toPrint" hidden>
+ 
+                                                        <!-- <img width="100px" alt="Logo" src="data:image/jpeg;base64,{{logo}}"> -->
+                                                        <img width="80px" alt="Logo" src="../../../assets/img/Logo.jpg">
+                                                        <br><br>
+                                                  
+                                                        <h4>Responsibility Statement</h4>
+                                                        <br>
+                                                        <div class="print-content" *ngIf="printData">
+                                                          I hereunder confirm and testify that while working for <strong>GAC</strong> in the capacity of
+                                                          <span class="bold"> ( {{ printData.jobTitle }} )</span>
+                                                          I received the following equipment and/or in possession of the following facilities:
+                                                          <br><br>
+                                                          <table border="1" class="table table-striped table-no-bordered table-hover text-center" cellspacing="0" width="100%" style="width:100%">
+                                                            <tr>
+                                                              <th>Code</th>
+                                                              <th>Description</th>
+                                                              <th>Type</th>
+                                                              <th>Serial Number</th>
+                                                              <th>Part Number</th>
+                                           
+                                                            </tr>
+                                                            <tr *ngFor="let i of printData.items" class="text-center">
+                                                              <td>{{i.code}}</td>
+                                                              <td>{{i.spec}}</td>
+                                                              <td>{{i.type}}</td>
+                                                              <td>{{i.SN}}</td>
+                                                              <td>{{i.PN}}</td>
+                                                        
+                                                            </tr>
+                                                          </table>
+                                                          <br>
+                                                          Accordingly, I will abide to the following usage statements:
+                                                          <ol>
+                                                            <li>
+                                                              I am responsible for all the equipment and facilities I am using while working.
+                                                            </li>
+                                                            <li>
+                                                              I am responsible to notify my direct manager if any problem occurs in the facilities or equipment I am
+                                                              using.
+                                                            </li>
+                                                            <li>
+                                                              In case of any damage to the equipment and/or facilities I am using due to misuse from my side, I will be
+                                                              held
+                                                              responsible and will be subject to disciplinary action according to company policy.
+                                                            </li>
+                                                            <li>
+                                                              Upon leaving my department or the company, I will deliver the equipment and/or facility on hand in good
+                                                              shape.
+                                                            </li>
+                                                          </ol>
+                                                          My signature below confirms my understanding and adherence to the articles of this Responsibility Statement.
+                                                  
+                                                          <br><br>
+                                                  
+                                                          <div class="bottom">
+                                                            Employee Name : <span class="bold"> {{ printData.name }} </span>
+                                                            <br>
+                                                            Title : <span class="bold">{{ printData.jobTitle }} </span>
+                                                            <br>
+                                                            Signature : _______________________
+                                                            <br>
+                                                            Date : _______________________
+                                                          </div>
+                                                  
+                                                        </div>
+                                                      </div><br>
+                                                      <!-- <a printSectionId="toPrint" (mouseover)="onPrint(row)" (mouseout)="onClearAss()" ngxPrint class="btn btn-simple btn-warning btn-icon"><i class="pe-7s-print"></i></a> -->
+                                                      <button printSectionId="toPrint" (mouseover)="onPrint(row)" (mouseout)="onClearAss()" ngxPrint >P</button>
+
+                                                      <a (click)="onEditEmployee(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                                      <!-- <a (click)="onDeleteEmployee(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> 
+                                                    -->
+                                                   
+                                                    </td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>
+                                                          <div  class="text-center" style="color: red; width: auto">
+                                                            <p *ngIf="Employees.length === 0">
+                                                                No Entry found
+                                                            </p>
+                                                          </div>
+                                                    </td>
+                                                  </tr>
+                                            </tbody>
+                                  </table>
+                            </div> 
+                        </div> 
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="col-md-1">
+                <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                  <option value="5">#Rows</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+          
+                  </select> 
+              </div>
+              <div class="col-md-3">
+                <pagination-controls (pageChange)="pageIndex = $event">    </pagination-controls>
+              </div>
+            </div>
+  </div>
+
+</div>
+<!-- hidden -->
+
+

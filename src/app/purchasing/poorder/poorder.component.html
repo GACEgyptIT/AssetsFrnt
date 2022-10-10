@@ -1,0 +1,355 @@
+<div class="main-content">
+  <ngx-alerts></ngx-alerts>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+
+  <div class="container-fluid">
+            <!-- Add-Edit Section -->
+            <div class="row" >
+            <div class="card col-md-12">
+                <form [formGroup]="poForm" (ngSubmit)="onSubmit()">
+                  <div class="content">
+                    <h4>  Create/Edit PurchasingOrder  </h4> 
+                          <!-- PurchasingOrder Profile-->
+                          <div class="row card col-md-12" style="background-color:  #f9f9f9;">
+                          <div class="col-md-6">
+                                <label  for="" class="control-label">PO Remarks
+                                </label>
+                                <input type="text" placeholder="Remarks" formControlName="poRemarks" class="form-control" >                     
+                                <label  for="" class="control-label">Supplier: <span *ngIf="getSupplierName.value" >  {{ getSupplierName.value | json }}   </span> 
+                                  <span class="star">*</span> 
+                                </label>
+                                <ngx-autocomplete  
+                                    required
+                                    id="splId--"
+                                    formControlName="splId"
+                                    [searchKeyword]="'splName'" 
+                                    [inputId]="'searchEmployee'"
+                                    [placeholderValue]="'Enter Supplier'" 
+                                    [entries]="Suppliers" 
+                                    (selectedValue)="selectSupplierEvent($event)">
+                                </ngx-autocomplete>
+                                <small [hidden]="poForm.controls.splId.valid || poForm.controls.splId.pristine" class="text-danger">
+                                  Supplier is required
+                                </small>
+                          </div>
+                          <div class="col-md-offset-6">
+                            <label> Select Purchase Requests </label>
+                            <ng-multiselect-dropdown 
+                                [placeholder]="'Purchase Requests'" 
+                                [data]="PRs" 
+                                [formControl]="getpoForm.prRemarks" 
+                                [settings]="settings"
+                                [disabled]="false"
+                                (onFilterChange)="onFilterChange($event)"
+                                (onDropDownClose)="onDropDownClose($event)"
+                                (onSelect)="onPRSelect($event)" 
+                                (onDeSelect)="onDeSelect($event)"
+                                (onSelectAll)="onSelectAllPRs($event)"
+                                (onDeSelectAll)="onDeSelectAll($event)"  >
+                            </ng-multiselect-dropdown>
+                          </div>
+                          </div>
+                          
+                          <!-- PRs Section -->
+                          <div class="row card col-md-12"  style="background-color:  #f9f9f9;" >
+                            <br>
+                           
+                            <legend>  
+                              Purchase Requests Details:
+                            </legend>
+                            <!-- PRs List -->
+                            <div formArrayName="PurchaseRequestes" class="col-md-12">
+                              <div *ngIf="getPRsGroup.length == 0" style="color: red;" class="text-center" > No PR Selected <br> <br> </div>
+                                  <div *ngFor="let pr of getPRsGroup.controls; let i = index" >
+                                 
+                                    <div [formGroupName]="i" class="col-md-12" >
+                                      <div class="controler col-md-1">
+                                          PR: {{ i+1 }}
+                                      </div>
+                                      <div class="controler col-md-2">
+                                       Remarks:  {{ getPRsGroup.controls[i].value.prRemarks }} 
+  
+                                      </div>
+                                      <div class="controler col-md-3">
+  
+                                        <label class="control-label" for="">Items List:  </label>
+                                        <span *ngIf="getPRsGroup.controls?.length == 0">No Assets</span>
+                                        <ul *ngFor="let itm of getPRsGroup.controls[i].value.Items" >
+                                         
+                                          <li *ngIf="itm != ''" > ( {{itm.itmName}} ) {{ itm.ItmQntPR}}  </li>
+                                        </ul>
+                                      </div>
+                                      <div class="col-md-2">
+                                        <a (click)="deleteItem(i)" routerLink="active" style="color: crimson;" > X </a> 
+                                      </div>
+                                    </div>
+                                  </div>
+                            </div> -->
+                          </div>
+                          <!-- PO Items Section -->
+                       <div class="row card col-md-12"  style="background-color:  #f9f9f9;" >
+                                  <div class="col-md-12">
+                                    <br> <br> 
+                                    <div class="col-md-6">
+                                      Remarks: {{ getpoForm.poRemarks.value}}
+                                    </div>
+                                    <div class="col-md-6">
+                                      Supplier: {{ getpoForm.splName.value }}
+                                    </div>
+                                    <br>
+                                  </div>
+                                  <div class="col-md-12">
+                                    <legend>Items Table</legend>
+                                    <div class="col-md-1">
+                                      #
+                                    </div>
+                                    <div class="col-md-3">
+                                     Names
+                                    </div>
+                                    <div class="col-md-2">
+                                      Qnt
+                                     </div>
+                                    <div class="col-md-2">
+                                      Prices
+                                    </div>
+                                    <div class="col-md-4">
+                                     Total
+                                    </div>
+                                    <br>
+                                  </div>
+                                  <div formArrayName="Items" class="col-md-12">
+             <legend> </legend>
+                                        <div *ngIf="getItemsGroup.length == 0" style="color: red;" class="col-md-12 text-center"> No Items <br> <br> </div>
+                                        <div *ngFor="let itm of getItemsGroup.controls; let i = index" >
+                                       
+                                          <div [formGroupName]="i" class="col-md-12" >
+                                            <div class="controler col-md-1">
+                                               {{ i+1 }}
+                                            </div>
+                                            <div class="controler col-md-3">
+                                              {{ itm.value.itmName }} 
+        
+                                            </div>
+                                            <div class="controler col-md-2">
+                                               {{ itm.value.ItmQntPO }} 
+         
+                                             </div>
+                                             <div class="controler col-md-2">
+                                               {{ itm.value.itmPrice }} 
+         
+                                             </div>
+                                             <div class="controler col-md-3">
+                                              {{ itm.value.itmTotalPricePO }} 
+                                             </div>
+
+
+                                          </div>
+                                          <br> <br> 
+                                        </div>
+                                     
+
+                                  </div>
+                           
+                                  <div>
+                                                                 <div class="col-md-8 text-center">
+                                                                  <legend> </legend>  
+                                                                    PO Total
+                                                                 </div>
+                                                                 <div class="col-md-4">
+                                                                  <legend> </legend>  
+                                                                   {{ getpoForm.poTotalAmount.value }}
+                                                                 </div>
+                                                                 <br> <br>  <br> 
+                                  </div>
+                          </div>
+                          <!-- Footer -->
+                          <div class="row footer col-md-12"> 
+                            <!-- [disabled]="employeeForm.status == 'INVALID' " -->
+                                  <button type="submit" class="btn btn-primary pe-7s-diskette" [disabled]="poForm.status == 'INVALID' " > Submit </button>
+                                  <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                                   <!-- Form is:  {{ poForm.status }} Form Value: {{ poForm.value | json }} -->
+                          </div>
+                  </div>
+                </form>
+            </div>
+            </div>
+
+            <!-- PurchasingOrders List Section -->
+            <div class="row card col-md-12" >
+              <div class="content">
+              <br>
+              <h4 class="title">PurchasingOrders List</h4>
+
+                      <!-- Toolbar -->
+                      <form novalidate [formGroup]="searchForm"> 
+                        <div class="card col-md-12 toolbarCard" >
+                          <div class=" col-md-12">
+                            <div class=" col-md-2" >                            
+                              <select value="0" (change)="onFilterByStatus($event)"   formControlName="Status"
+                              class="form-control" data-title="Single Select" data-style="btn-default btn-block" 
+                              data-menu-style="dropdown-blue"  >
+                              <option value="0" selected>-- Filter By --</option>
+                                <option *ngFor="let sts of Statuss" value={{sts.stsName}} >
+                                    {{sts.stsName}}
+                                </option>
+  
+                              </select> 
+                              
+                           </div>
+                            <div class=" col-md-2">
+                              <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                <option value="5">Rows</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                    
+                                </select> 
+                            </div>
+                            <div class=" col-md-6 marginsPaging" >
+                              <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                            </div>
+                            <br>
+                          </div>
+                          <div class=" col-md-12">
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                            </div>
+                            <div class=" col-md-2 marginsSearch ">
+                              <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                        <div id="print-section" class="row card col-md-12 " style="overflow-x:auto;"  >
+                            <div class="content">
+                                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <!-- Table Headers -->
+                                            <thead>
+                                                  <tr>
+                                                    <th> 
+                                                      <div class=" form-check">
+                                                        <label class=" form-check-label">
+                                                          <input id="assetItemALL--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                                          <span class=" form-check-sign">
+                                                            <span class=" check"> </span>
+                                                          </span>
+                                                        </label>
+                                                      </div>
+                                                    </th>
+                                                    <th>
+                                                      #
+                                                    </th>
+                                                    <th [class.active]="order === 'poRemarks'" (click)="setOrder('empHRCode')"
+                                                      class="mdl-data-table__cell--non-numeric">
+                                                      Remarks <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'poRemarks'" (click)="setOrder('empHRCode')"
+                                                    class="mdl-data-table__cell--non-numeric">
+                                                    Supplier <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'poDate'" (click)="setOrder('empFullName')">
+                                                      Date <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'PurchaseRequestes'" (click)="setOrder('empFullName')">
+                                                      Items <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th [class.active]="order === 'PurchaseRequestes'" (click)="setOrder('empFullName')">
+                                                      PurchaseRequestes <span [hidden]="reverse">▼</span>
+                                                      <span [hidden]="!reverse">▲</span>
+                                                    </th>
+                                                    <th>
+                                                      Total Amount
+                                                    </th>
+                                                    <div>
+                                                      Status
+                                                    </div>
+                                                    <th >
+                                                      Actions 
+                                                    </th>
+                                                  </tr>
+                                            </thead>
+                                            <!-- Table Body -->
+                                            <tbody *ngIf="POs.length == 0" ><tr  [ngStyle]="{'color': 'red'}" style="text-align:center;"> No Enties Found</tr></tbody>
+                                            <tbody *ngIf="POs.length > 0" >
+                                                  <tr  *ngFor="let row of POs | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                                    <td>
+                                                      <div class="form-check">
+                                                        <label class=" form-check-label">
+                                                          <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                                          <span class=" form-check-sign">
+                                                            <span class=" check"> </span>
+                                                          </span>
+                                                        </label>
+                                                      </div>
+                                                    </td>
+                                                    <td>
+                                                      {{ i+1 }}
+                                                    </td>
+                                                    <td>{{ row?.poRemarks }}</td>
+                                                    <td>{{ row?.splName }}</td>
+                                                    <td>{{ row?.poDate }}</td>  
+                                                    <td >
+                                                      <span *ngIf="row.Items?.length == 0">No Items</span>
+                                                      <ul *ngFor="let itm of row.Items" >
+                                                       
+                                                        <li *ngIf="itm != ''" > {{itm.itmName}} ( {{ itm.ItmQntPO}} )   </li>
+                                                      </ul>
+                                                    </td>
+                                                    <td >
+                                                      <span *ngIf="row.PurchaseRequestes?.length == 0">No PRs</span>
+                                                      <ul *ngFor="let pr of row.PurchaseRequestes" >
+                                                       
+                                                        <li *ngIf="pr != ''" > {{pr.prRemarks}}   </li>
+                                                      </ul>
+                                                    </td>
+                                                    <td>
+                                                      {{ row?.poTotalAmount }}
+                                                    </td>
+                                                    <td>
+                                                      {{ row?.stsName }}
+                                                    </td>
+                                                    <td>
+                                                      <a *ngIf="row?.stsName == 'Open'" (click)="onEditPr(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                                      <a  *ngIf="row?.stsName == 'Open'" (click)="onCancelPr(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> 
+                                                    </td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>
+                                                          <div  class="text-center" style="color: red; width: auto">
+                                                            <p *ngIf="POs.length === 0">
+                                                                No Entry found
+                                                            </p>
+                                                          </div>
+                                                    </td>
+                                                  </tr>
+                                            </tbody>
+                                  </table>
+                            </div> 
+                        </div> 
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="col-md-1">
+                <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                  <option value="5">#Rows</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+          
+                  </select> 
+              </div>
+              <div class="col-md-3">
+                <pagination-controls (pageChange)="pageIndex = $event">    </pagination-controls>
+              </div>
+            </div>
+  </div>
+
+</div>
+

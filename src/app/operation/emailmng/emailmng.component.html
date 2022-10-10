@@ -1,0 +1,271 @@
+<div class="main-content">
+  <ngx-alerts></ngx-alerts>
+    <div class="container-fluid" >
+        <form [formGroup]="emailForm" (ngSubmit)="onSubmit()" > 
+
+
+                <div class="card col-md-12">
+                    <div class="col-md-12">
+                      <br>  
+                        <div class="col-md-4">
+                            <label>Select Genaric Email </label>
+                                <ngx-autocomplete
+                                formControlName="genEmailId"
+                                [searchKeyword]="'genEmailAddress'" 
+                                [inputId]="'searchGmail'" 
+                                [placeholderValue]="'Enter the Employee Name'" 
+                                [entries]="Emails" 
+                                (selectedValue)="selectEmpEvent($event)"
+                            
+                                >
+                            </ngx-autocomplete>
+                        
+                        </div>
+                        <div class="col-md-8">
+                            <label>Select Employees </label>
+                            <ng-multiselect-dropdown #multiSelect
+                            [placeholder]="'Select Employees'" 
+                            [data]="EmployeesList" 
+                            [formControl]="getEmployees" 
+                            [settings]="settings"
+                            [disabled]="false"
+                            (onFilterChange)="onFilterChange($event)"
+                            (onDropDownClose)="onDropDownClose($event)"
+                            (onSelect)="onItemSelect($event)" 
+                            (onDeSelect)="onDeSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"
+                            (onDeSelectAll)="onDeSelectAll($event)"
+                        
+                            >
+                    
+                            </ng-multiselect-dropdown>
+
+                        </div>
+                        <!-- <div class="col-md-3">
+                            <label>Multiselect astDescription or astCode </label>
+                            
+                            <ng-select class="btn "
+                                    [items]="Assets"
+                                    bindLabel="astDescription"
+                                    bindValue="astCode"
+                                    [multiple]="true"
+                                    (onSelectAll)="onChangeAssets($event)"
+                                    formControlName="getAssets"
+                                    
+                                    [searchFn]="customSearchFn"
+                                    >
+                            </ng-select>
+                        </div> -->
+                        <br>   <br>
+                    </div>
+                    <div class="row col-md-12">
+                        <button type="submit" class="btn btn-primary " > Assign </button>
+                        <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                        <!-- Form is:  {{ assetForm.status }} -->
+                        <br>   <br>
+                    </div>
+                    <br>
+                </div>
+                <br>       
+                <div class="card col-md-12" >  <!--  [hidden]="getAssets.length == 0" -->
+                    <h4> Movment Details</h4>
+                    <div class="row">
+                            <!-- Move assets to: {{ getToEmp.value }}
+
+                            <h4>Assets To Move</h4>
+                            <ul >
+                            <li *ngFor="let ast of getAssets.value">
+                                <span>Description: {{ast?.astDescription}}</span>
+                                <span>Code:  {{ast?.astCode}}</span>
+                                <span> <font color="red">Remove from: </font>  {{ast?.EmployeeName}}</span>
+                            </li>
+                            </ul> -->
+                    <!-- <table>
+                        <tr class="col-md-12">
+                            <th class="col-md-3">
+                                Description
+                            </th>
+                            <th class="col-md-3">
+                                Code
+                            </th>
+                            <th class="col-md-3">
+                                Move from Emp
+                            </th>
+                        </tr>
+                        <tbody>
+                                <tr *ngFor="let ast of getAssets.value" class="col-md-12">
+                                    <td class="col-md-3">
+                                        {{ast?.astDescription}}
+                                    </td>
+                                    <td class="col-md-3">
+                                        {{ast?.astCode}}
+                                    </td>
+                                    <td class="col-md-3">
+                                        {{ast?.EmployeeName}}
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table> -->
+                            {{ emailForm.value | json  }}
+                    </div>
+                </div>
+         
+        </form>
+        <!-- <br> -->
+      
+        <div class="row" >
+            <div class="col-md-12">
+            <br>
+            <div class="card">
+                <div class="content">
+                  <h4 class="title">Genaric Emails List</h4>
+                  <!--           Toolbar        -->
+                  <div class="toolbar col-md-12" >
+          
+                      <div class="col-md-2">
+                        <button class="btn btn-primary" (click)="onGetAllGenaricEmails()">Refresh</button>
+                      </div>
+                      <div class="col-md-1">
+                        <button class="btn btn-primary"  printTitle="MyTitle" printSectionId="print-section" [useExistingCss]="true" ngxPrint>Print</button>
+
+                      </div >
+                      <div class="col-md-1">
+                        <button class="btn btn-primary" (click)="onExportExcel()">Export</button> 
+                      </div>
+                     <!--        Here you can write extra buttons/actions for the toolbar              -->
+                  </div>
+                  <div class="toolbar col-md-12" >
+                    <div class="col-md-2">
+                      <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                        <option value="5">Rows</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="9999">All</option>
+                        </select> 
+                    </div>
+                    <div class="col-md-4">
+                      <pagination-controls  (pageChange)="p = $event"> </pagination-controls>
+                    </div>
+                    <div class="col-md-1">   Filter:</div>
+                    <div class="col-md-2">
+                      
+                
+                        <select formControlName="asttypId" required
+                          (change)="onFilterByAssetType($event)" class="form-control" data-title="Single Select" 
+                          data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                          <option value=""> Show All </option>
+                          <!-- <option *ngFor="let a of Emails" value={{a.asttypId}} > {{a.asttypName}} </option> -->
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                      <input #search id="search" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+                    </div>
+
+                  <!--        Here you can write extra buttons/actions for the toolbar              -->
+                 </div>
+
+                  <div id="print-section" >
+                  <div class="fresh-datatables">
+                    <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                    <!-- Table Headers -->
+                    <thead>
+                          <tr>
+                            <th> 
+                              <div class=" form-check">
+                                <label class=" form-check-label">
+                                  <input id="assetItemALL--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                  <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                  </span>
+                                </label>
+                              </div>
+                              <!-- <div class=" form-check">
+                                <button type="button" (click)="CheckAllOptions()">Toggle</button>
+                              </div> -->
+                            </th>
+                            <th [class.active]="order === 'astId'" (click)="setOrder('id')">
+                              Employee <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'info.astDescription'" (click)="setOrder('astDescription')"
+                              class="mdl-data-table__cell--non-numeric">
+                              Individual Emails <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                            </th>
+                            <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                              Genaric Emails <span [hidden]="reverse">▼</span>
+                              <span [hidden]="!reverse">▲</span>
+                            </th>
+          
+                            <th >
+                              Actions 
+                            </th>
+
+                          </tr>
+                    </thead>
+                    <!-- Table Body -->
+                    <tbody>
+                          <tr  *ngFor="let emp of Employees | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: 1 }; let i = index">
+                            <td>
+                              <div class="form-check">
+                                <label class=" form-check-label">
+                                  <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, emp)" [(ngModel)]="emp.checkbox" [value]="emp.checkbox" type="checkbox" value="" />
+                                  <span class=" form-check-sign">
+                                    <span class=" check"> </span>
+                                  </span>
+                                </label>
+                              </div>
+                              <!-- <div *ngFor="let checkbox of checkboxes">
+                                <input type="checkbox" [(ngModel)]="checkbox.checked" [value]="checkbox.value"><span>{{checkbox.name}}</span>
+                            </div> -->
+    
+                            </td>
+                            <td>{{ emp?.empFullName }}</td>
+                            <td > 
+                              <ul >
+                                <li >     {{ emp?.empIndividualEmail0 }}  </li>
+                                <li >     {{ emp?.empIndividualEmail1 }}  </li>
+                                <li *ngIf="emp?.empIndividualEmail2 != ''">     {{ emp?.empIndividualEmail2 }}  </li>
+                                <li >     {{ emp?.empIndividualEmail3 }}  </li>
+                              </ul>
+                            </td>
+                            <td>
+                              <ul *ngFor="let mail of emp.GenaricEmailsAddress">
+                                <li >     {{ mail }}  </li>
+                              </ul>
+                            </td>
+                            <td>
+                              <!-- <a (click)="onEditAsset(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                              <a (click)="onDeleteAsset(row?.astId)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                         -->  </tr>
+                    </tbody>
+                    </table>
+                  </div>
+                 </div> 
+                 <!-- endprintsection -->
+                </div>
+                <!-- end content-->
+            </div>
+            <!--  end card  -->
+            </div>
+          <!-- end col-md-12 -->
+          <div class="col-md-12">
+            <div class="col-md-1">
+              <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                <option value="5">#Rows</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="9999">All</option>
+                </select> 
+            </div>
+            <div class="col-md-3">
+              <pagination-controls (pageChange)="p = $event">    </pagination-controls>
+            </div>
+           </div>
+      </div>
+    </div>
+</div>

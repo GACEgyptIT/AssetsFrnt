@@ -1,0 +1,383 @@
+<div class="main-content">
+    <ngx-alerts></ngx-alerts>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <div class="container-fluid">
+              <!-- Add-Edit Section -->
+              <div class="row card col-md-12" >
+                    <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+                      <div class="content">
+                              <h4>Item Transfer  </h4> 
+                              <!-- Transfer Section-->
+                              <div class="row card col-md-12" style="background-color:  #f9f9f9;">
+                                <br>
+                                <div  class="col-md-6"> 
+                                  <label class="control-label" for="">Select Item:
+                                    <span class="star">*</span>
+                                  </label>
+                                    <select value="0" required  (change)="onItemSlect($event)"
+                                          formControlName="itmId" class="form-control" data-title="Single Select" 
+                                          data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                                  <option value="0" selected>-- Select--</option>
+                                                  <option *ngFor="let itm of Items" value={{itm.itmId}}>
+                                                      {{itm.itmName}}
+                                                  </option>
+                                    </select>
+                                </div>
+                                <div  class="col-md-6">
+                                  <label class="control-label" for="">Quantity: <span class="star">*</span> </label>
+                                  <input type="text" placeholder="Quantity" formControlName="itmQnt"  class="form-control" >
+                                  <small [hidden]="transferForm.controls.itmQnt.valid || transferForm.controls.itmQnt.pristine" class="text-danger">
+                                    Quantity is required.
+                                  </small>
+                                </div>
+                                <br><br>    <br><br>
+                              </div>
+                              <div class="row card col-md-12" style="background-color:  #f9f9f9;">
+                                <br>
+                                <div  class="col-md-3">
+                                  <label class="control-label" for="">From Store:
+                                    <span class="star">*</span>
+                                    <span *ngIf="FromStore?.ItemQnt" style="color: green;">   SOH ( {{ FromStore?.ItemQnt | json }} )</span>
+                                    <span *ngIf="FromStores.length == 0" style="color: red;">   No Stock available</span>
+                                  </label>
+                                <select value="0"  formControlName="FromStoreId"  (change)="onFromStoreSelect($event)"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                      <option value="0" selected>-- Select--</option>
+                                        <option *ngFor="let str of FromStores" value={{str.StoreId}} >
+                                            {{str.strName}}
+                                        </option>
+                                </select>
+                                </div>
+                                <div  class="row col-md-1">
+
+                                </div>
+                                <div  class="row col-md-2" >
+                                  <label class="control-label" for="">Transfer to:
+                                    <span class="star">*</span>
+                                 </label>
+                                  <div class="custom-control custom-radio">
+                                   <input (change)="onChangeReceive($event)" id="Store" type="radio" class="custom-control-input" select value="Store" name="ReceiveTo" formControlName="ReceiveTo" required>
+                                   <label class="custom-control-label" for="Store">Store</label>
+                                 </div>
+                                 <div class="custom-control custom-radio">
+                                   <input  (change)="onChangeReceive($event)" id="Consumption" type="radio" class="custom-control-input" value="Consumption" name="ReceiveTo" formControlName="ReceiveTo"  required>
+                                   <label class="custom-control-label" for="Consumption">Consumption</label>
+                                 </div>
+                               </div>
+                               <div class="col-md-2" *ngIf="getReceiveTo.value == 'Consumption'">
+                                <label class="control-label" for="">Select Type:
+                                  <span class="star">*</span>
+                               </label>
+                                <select value="Employee" (change)="onChangeReceiveTo($event)"
+                                    class="form-control" data-title="Single Select" 
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                            <option value="" selected>-- Select --</option>
+                                            <option value="Employee" selected>Employee</option>
+                                            <option value="Department" >Department</option>
+                                            <option value="Branch" >Branch</option>
+                                            <option value="Company" >Company</option>
+                                </select>
+                               </div>
+                               <div  class="col-md-3" *ngIf="getEmpId.value != null">
+                                <label class="control-label" for="">Employee:
+                                  <span class="star">*</span>
+                              </label>
+                                <select value="0"  formControlName="EmpId"  (change)="onEmployeeSelect($event)"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                      <option value="0" selected>-- Select--</option>
+                                        <option *ngFor="let emp of Employees" value={{emp.empId}} >
+                                            {{emp.empFullName}}
+                                        </option>
+                                </select>
+                              </div>
+                              <div  class="col-md-3" *ngIf="getDptId.value != null">
+                                <label class="control-label" for="">Department:
+                                  <span class="star">*</span>
+                              </label>
+                                <select value="0"  formControlName="DptId"  (change)="onDepartmentSelect($event)"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                      <option value="0" selected>-- Select--</option>
+                                        <option *ngFor="let dpt of Departments" value={{dpt.dptId}} >
+                                            {{dpt.dptName}}
+                                        </option>
+                                </select>
+                              </div>
+                              <div  class="col-md-3" *ngIf="getBrnId.value != null">
+                                <label class="control-label" for="">Branchs:
+                                  <span class="star">*</span>
+                              </label>
+                                <select value="0"  formControlName="BrnId"  (change)="onBranchSelect($event)"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                      <option value="0" selected>-- Select--</option>
+                                        <option *ngFor="let brn of Branchs" value={{brn.brnId}} >
+                                            {{brn.brnName}}
+                                        </option>
+                                </select>
+                              </div>
+                              <div  class="col-md-3" *ngIf="getComId.value != null">
+                                <label class="control-label" for="">Companys:
+                                  <span class="star">*</span>
+                              </label>
+                                <select value="0"  formControlName="ComId"  (change)="onCompanySelect($event)"
+                                class="form-control" data-title="Single Select" 
+                                data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                      <option value="0" selected>-- Select--</option>
+                                        <option *ngFor="let com of Companys" value={{com.comId}} >
+                                            {{com.comName}}
+                                        </option>
+                                </select>
+                              </div>
+                                <div  class="col-md-4" *ngIf="getReceiveTo.value == 'Store'">
+                                  <label class="control-label" for="">To Store:
+                                    <span class="star">*</span>
+                                </label>
+                                  <select value="0"  formControlName="ToStoreId"  (change)="onToStoreSelect($event)"
+                                  class="form-control" data-title="Single Select" 
+                                  data-style="btn-default btn-block" data-menu-style="dropdown-blue"  >
+                                        <option value="0" selected>-- Select--</option>
+                                          <option *ngFor="let str of ToStores" value={{str.StoreId}} >
+                                              {{str.strName}}
+                                          </option>
+                                  </select>
+                                </div>
+                                <br><br><br><br>
+                                <br><br>    <br><br>
+                              </div>
+                              <!-- Footer -->
+                              <div class="row footer col-md-12">
+                                    <button type="submit" class="btn btn-primary" [disabled]="transferForm.status == 'INVALID' " > Transfer </button>
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                              </div>
+                              <!-- <div>
+                                {{ transferForm.value |json}}
+                              </div> -->
+                      </div>
+                    </form>         
+              </div> 
+                            <!-- Details Section -->
+                            <div class="row card col-md-12" >
+
+                                <div class="content">
+                                        <h4>Transfer Details </h4> 
+                                        <div class="row card col-md-12" style="background-color:  #f9f9f9;">
+                                          <br>
+                                          <div  class="col-md-3"> 
+                                            <label class="control-label" for=""> Item ( {{ transferForm.controls.itmName.value }} ) in All Stores</label>
+                                            <legend></legend>
+                                            <li *ngFor="let str of Item?.Stores; let i = index">
+                                                <span> {{i+1}} :</span>
+                                                <span> {{str?.strName}} - Qnt: {{str?.ItemQnt}}     </span>
+                                            </li>
+                                            <br><br> 
+                                          </div>
+                                          <div  class="col-md-3"> 
+                                            <label class="control-label" for=""> From Store </label>
+                                            <legend></legend>
+                                            <span>{{ transferForm.controls.FromStoreName.value }}    </span>
+                                            <br><br> 
+                                          </div>
+                                          <div  class="col-md-3"> 
+                                            <label class="control-label" for=""> Quantity </label>
+                                            <legend></legend>
+                                            <span>{{ transferForm.controls.itmQnt.value }}   </span>
+                                            <br><br> 
+                                          </div>
+                                          <div  class="col-md-3"> 
+                                            <label class="control-label" for=""> To Store </label>
+                                            <legend></legend>
+                                            <span>{{ transferForm.controls.ToStoreName.value }}    </span>
+                                            <br><br> 
+                                          </div>
+                                          <div class="col-md-4" *ngIf="getReceiveTo.value == 'Consumption' && getEmpName.value != null ">
+                                            To Employee: {{ getTransferForm.EmpName.value }}
+                                           </div>
+                                           <div class="col-md-4" *ngIf="getReceiveTo.value == 'Consumption' && getDptName.value != null ">
+                                            To Department: {{ getTransferForm.DptName.value }}
+                                           </div>
+                                           <div class="col-md-4" *ngIf="getReceiveTo.value == 'Consumption' && getBrnName.value != null ">
+                                            To Branch: {{ getTransferForm.BrnName.value }}
+                                           </div>
+                                           <div class="col-md-4" *ngIf="getReceiveTo.value == 'Consumption' && getComName.value != null ">
+                                            To Company: {{ getTransferForm.ComName.value }}
+                                           </div>
+                                        </div>
+                                </div>
+                                 
+                        </div>
+                            <!-- Transfer List Section -->
+                            <div class="row card col-md-12" >
+                              <div class="content">
+                              <br>
+                              <h4 class="title">Transfer List</h4>
+                
+                                      <!-- Toolbar -->
+                                      <!-- <form novalidate [formGroup]="searchForm">  -->
+                                        <div class="card col-md-12 toolbarCard" >
+                                          <div class=" col-md-12">
+                                            <div class=" col-md-2">
+                                              <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                                <option value="5">Rows</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                    
+                                                </select> 
+                                            </div>
+                                            <div class=" col-md-6 marginsPaging" >
+                                              <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                                            </div>
+                                            <br>
+                                          </div>
+                                          <div class=" col-md-12">
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                                            </div>
+                                            <div class=" col-md-2 marginsSearch ">
+                                              <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                                            </div>
+                                          </div>
+                                        </div>
+                                      <!-- </form> -->
+                
+                                        <div id="print-section" class="row card col-md-12 " style="overflow-x:auto;"  >
+                                            <div class="content">
+                                                  <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                            <!-- Table Headers -->
+                                                            <thead>
+                                                                  <tr>
+                                                                    <th> 
+                                                                      <div class=" form-check">
+                                                                        <label class=" form-check-label">
+                                                                          <input id="assetItemALL--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                                                          <span class=" form-check-sign">
+                                                                            <span class=" check"> </span>
+                                                                          </span>
+                                                                        </label>
+                                                                      </div>
+                                                                    </th>
+                                                                    <th>
+                                                                      #
+                                                                    </th>
+                                                                    <th [class.active]="order === 'poRemarks'" (click)="setOrder('empHRCode')"
+                                                                      class="mdl-data-table__cell--non-numeric">
+                                                                      Item <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                                    </th>
+                                                                    <th [class.active]="order === 'poRemarks'" (click)="setOrder('empHRCode')"
+                                                                    class="mdl-data-table__cell--non-numeric">
+                                                                    Qnt <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                                                    </th>
+                                                                    <th>
+                                                                    Price
+                                                                    </th>
+                                                                    <th>
+                                                                    Cost
+                                                                    </th>
+                                                                    <th [class.active]="order === 'poDate'" (click)="setOrder('empFullName')">
+                                                                      From <span [hidden]="reverse">▼</span>
+                                                                      <span [hidden]="!reverse">▲</span>
+                                                                    </th>
+                                                                    <th [class.active]="order === 'PurchaseRequestes'" (click)="setOrder('empFullName')">
+                                                                      To <span [hidden]="reverse">▼</span>
+                                                                      <span [hidden]="!reverse">▲</span>
+                                                                    </th>
+                                                                    <th [class.active]="order === 'PurchaseRequestes'" (click)="setOrder('empFullName')">
+                                                                      Date <span [hidden]="reverse">▼</span>
+                                                                      <span [hidden]="!reverse">▲</span>
+                                                                    </th>
+  
+                                                                    <!-- <th >
+                                                                      Actions 
+                                                                    </th> -->
+                                                                  </tr>
+                                                            </thead>
+                                                            <!-- Table Body -->
+                                                            <tbody *ngIf="Transfers.length == 0" ><tr  [ngStyle]="{'color': 'red'}" style="text-align:center;"> No Enties Found</tr></tbody>
+                                                            <tbody *ngIf="Transfers.length > 0" >
+                                                                  <tr  *ngFor="let row of Transfers | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                                                    <td>
+                                                                      <div class="form-check">
+                                                                        <label class=" form-check-label">
+                                                                          <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row)" [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                                                          <span class=" form-check-sign">
+                                                                            <span class=" check"> </span>
+                                                                          </span>
+                                                                        </label>
+                                                                      </div>
+                                                                    </td>
+                                                                    <td>
+                                                                      {{ i+1 }}
+                                                                    </td>
+                                                                    <td>{{ row?.itmName }}</td>
+                                                                    <td>{{ row?.itmQnt }}</td>
+                                                                    <td>{{ row?.Price }}</td>
+                                                                    <td>{{ row?.Cost }}</td>
+                                                                    <td>{{ row?.FromStoreName }}</td>  
+                                                                    <td>
+                                                                      {{ row?.ToStoreName }}
+                                                                      {{ row?.EmpName }}
+                                                                      {{ row?.DptName }}
+                                                                      {{ row?.BrnName }}
+                                                                      {{ row?.ComName }}
+                                                                    </td>
+                                                                    <td>{{ row?.trnsDate }}</td>
+                                                                    <td>{{ row?.UserName }}</td>
+                                        
+                                                                    <td >
+                                                                      <span *ngIf="row.Items?.length == 0">No Items</span>
+                                                                      <ul *ngFor="let itm of row.Items" >
+                                                                       
+                                                                        <li *ngIf="itm != ''" > {{itm.itmName}} ( {{ itm.ItmQntRec}} )   </li>
+                                                                      </ul>
+                                                                    </td>
+                                                                    <td >
+                                                                    </td>
+                                                                    <td>
+                                                                      {{ row?.strName }}
+                                                                    </td>
+                                                                    <!-- <td>
+                                                                      <a (click)="onEditPr(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                                                      <a (click)="onCancelPr(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> 
+                                                                    </td> -->
+                                                                  </tr>
+                                                                  <tr>
+                                                                    <td>
+                                                                          <div  class="text-center" style="color: red; width: auto">
+                                                                            <p *ngIf="Transfers.length == 0">
+                                                                                No Entry found
+                                                                            </p>
+                                                                          </div>
+                                                                    </td>
+                                                                  </tr>
+                                                            </tbody>
+                                                  </table>
+                                            </div> 
+                                        </div> 
+                              </div>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="col-md-1">
+                                <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                                  <option value="5">#Rows</option>
+                                  <option value="5">5</option>
+                                  <option value="10">10</option>
+                                  <option value="25">25</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                          
+                                  </select> 
+                              </div>
+                              <div class="col-md-3">
+                                <pagination-controls (pageChange)="pageIndex = $event">    </pagination-controls>
+                              </div>
+                            </div>
+    </div>
+</div>
+        
+  
+  

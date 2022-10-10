@@ -1,0 +1,20 @@
+<title > {{ name }}</title>
+<p>
+  Clicking on items toggles their selection, single arrow buttons move the selected items, double-arrows move all items
+</p>
+<div class="container">
+  <ul>
+    LIST 1
+    <li   *ngFor="let item of list1" [class.item-selected]="item.selected"   (click)="toggleSelection(item, 1)">{{item.text}}</li>
+  </ul>
+  <div class="buttons-container">
+  <button class="pe-7s-angle-right-circle" (click)="moveSelected('right')"></button>
+  <button class="pe-7s-angle-right-circle" (click)="moveAll('right')"></button>
+  <button class="pe-7s-angle-left-circle" (click)="moveSelected('left')"></button>
+  <button class="pe-7s-angle-left-circle" (click)="moveAll('left')"></button>
+  </div>
+  <ul>
+    LIST 2
+    <li   *ngFor="let item of list2"    [class.item-selected]="item.selected"    (click)="toggleSelection(item, 2)">{{item.text}}</li>
+  </ul>
+</div>

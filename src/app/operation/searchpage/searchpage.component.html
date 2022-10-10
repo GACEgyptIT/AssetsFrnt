@@ -1,0 +1,94 @@
+<!-- <form novalidate [formGroup]="form">
+
+  <h3>Auto Search</h3>
+  <input type="text" 
+         class="form-control"
+         #searchText
+         (input)="autoSearch.emit(searchText.value)">
+
+  <hr/>
+
+  <h3>Group Filter</h3>
+  <div class="row">
+    <div class="col-md-3">
+  <input type="text" 
+  formControlName="name"
+         class="form-control"
+         placeholder="name"
+         #searchText
+        />
+    </div>
+    <div class="col-md-3 col-sm-3">
+      <select class="form-control"
+              formControlName="prefix">
+        <option value="">Prefix</option>
+        <option value="MR">MR</option>
+        <option value="MS">MS</option>
+      </select>
+    </div>
+
+    <div class="col-md-3 col-sm-3">
+      <select class="form-control"  formControlName="ItemCategoryName">
+        <option value="">ItemCategoryName</option>
+        <option value="Stationary">Stationary</option>
+        <option value="Computing">Computing</option>
+      </select>
+      <select value="0"
+      formControlName="ItemCategoryName" class="form-control" data-title="Single Select" 
+      data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+      <option value="0"> Select Category </option>
+      <option value="1"> Show All </option>
+      <option *ngFor="let a of ItemsCategorys" value={{a.icName}} > {{a.icName}} </option>
+    </select>
+    </div>
+
+    <div class="col-md-3 col-sm-3">
+      <select class="form-control" formControlName="CostCenterName">
+        <option value="">CostCenterName</option>
+        <option value="Alex-Port">Alex-Port</option>
+        <option value="Suez">Suez</option>
+      </select>
+      <select value="0"
+      formControlName="CostCenterName" class="form-control" data-title="Single Select" 
+      data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+      <option value="0"> Select Cost Center </option>
+      <option value="1"> Show All </option>
+      <option *ngFor="let a of CostCenters" value={{a.ccName}} > {{a.ccName}} </option>
+    </select>
+    </div>
+
+    <div class="col-md-3 col-sm-3">
+      <button class="btn btn-primary" (click)="search(form.value)"> Search </button>
+    </div>
+  </div>
+
+</form><br/>
+
+<table class="table table-responsive" >
+    <tr>
+      <th>invNumber</th>
+      <th>invAmount</th>
+      <th>invStatus</th>
+      <th>ItemCategoryName</th>
+      <th>CostCenterName</th>
+    </tr>
+    <tbody>
+       <tr class="text-center" style="color: red;" *ngIf="TempInvoices.length === 0">
+            No Entry found
+       </tr>
+      <tr *ngFor="let user of TempInvoices | datafilter: mySearchKeyWord " >
+        <td>{{ user.invNumber }}</td>
+        <td>{{ user.invAmount }}</td>
+        <td>{{ user.invStatus }}</td>
+        <td>{{ user.ItemCategoryName }}</td>
+        <td>{{ user.CostCenterName }}</td>
+      </tr>
+    </tbody>
+  
+</table>
+<div  class="text-center" style="color: red;">
+    <p *ngIf="TempInvoices.length === 0">
+        No Entry found
+    </p>
+</div> -->
+

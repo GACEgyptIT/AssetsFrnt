@@ -1,0 +1,68 @@
+
+<div class="main-content">
+    <div class="container-fluid">
+
+            <div class="card col-md-12">
+                <div class="col-md-3"> 
+                    <span>
+                        Code:  {{ Asset.astCode }}
+                    </span>
+                </div>
+                <div class="col-md-3"> 
+                    <span>
+                      Type:   {{ Asset.AssetTypeName }}
+                    </span>
+                </div>
+                <div class="col-md-3"> 
+                    <span>
+                     Descripion:   {{ Asset.astDescription }}
+                    </span>
+                </div>
+                <div class="col-md-3"> 
+                    <span>
+                     Current Employee: {{ Asset.EmployeeName }}
+                    </span>
+                </div>
+            
+            </div> 
+            <!-- style="overflow-x:auto;"  -->
+            <div class="fresh-datatables" >
+              <a routerLink="/masterdata/assets" routerLinkActive="active">Back to Assets List</a>  
+              <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+        
+              <thead>
+                    <tr>
+                      <th >
+                        #
+                      </th>
+                      <th >
+                        Date/Time
+                      </th>
+                      <th >
+                        User Name
+                      </th>
+                      <th>
+                          From               
+                      </th>
+                      <th>
+                          To
+                      </th>
+                    </tr>
+              </thead>
+              <tbody>
+                    <tr  *ngFor="let row of AssetTrackingVMs | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                      <td>{{ i+1 }}</td>
+                      <td>{{ row.DateTime }}</td>
+                      <td>{{ row.usrAccountName }}</td>
+                      <td>{{ row.From }}</td>
+                      <td>{{ row.To }}</td>
+                    </tr>
+              </tbody>
+              </table>
+            </div>
+      
+    </div>
+</div>
+
+
+           

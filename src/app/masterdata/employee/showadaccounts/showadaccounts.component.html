@@ -1,0 +1,51 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">AD Accounts List</h4> 
+                      <a  routerLink="/masterdata/employeeimport" routerLinkActive="active">Go To Import Page</a>
+              <br>    <a  routerLink="/masterdata/employee" routerLinkActive="active">Go To Employees Page</a>
+              <br>  
+                     
+                      <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onShowBy()"  > Refresh </button> <span style="color: red;">         Accounts Imported from AD  </span> 
+                      <div class=" col-md-2">
+                        <select id="PerPage" (change)="onShowBy($event)" class="marginsDropdownList form-control" value="5">
+                          <option value="ShowAll">Show All</option>
+                          <option value="ServiceAccounts">Service Accounts</option>
+                          <option value="ArchiveAccounts">Archive Accounts</option>
+                        </select> 
+                      </div>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                 #
+                                </th>
+                                <th >
+                                  Account Name
+                                </th>
+
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody>
+                              <tr  *ngFor="let row of AllAccounts; let i = index">
+                                <td>{{ i+1 }}</td>
+                                 <td *ngIf="row?.saName" > {{ row?.saName }} </td>
+                                 <td *ngIf="row?.archName" > {{ row?.archName }} </td>
+                              </tr>
+  
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

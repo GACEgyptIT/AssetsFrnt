@@ -1,0 +1,71 @@
+
+
+<div class="container-fluid">
+                          <!-- <a class="pull-right" (click)="onShowHideCodeGuide()" [hidden]="!showCodeGuide">Hide Code Guide</a>   -->
+                        <legend>   <h4 class="title"> Code Guide   (   Name / Code   ) </h4>   </legend>
+    
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+        
+                                    <div class="col-md-4">
+                                      <b>  Asset Types Code   </b> 
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>   Companies Code   </b> 
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>   Branchs Code   </b> 
+                                    </div>
+                            </div>
+                            <br>
+                         <div class="col-md-4" >
+                            <br>
+                            <ul  *ngFor="let row of AssetTypes">
+                                <li>
+                                {{ row.asttypName}}
+                                </li>
+                            </ul>
+                         </div>
+                         <div class="col-md-4" >
+                            <ul  *ngFor="let row of Companies">
+                                <li>
+                                {{ row.comName}} ({{ row.CompanyCode }})
+                                </li>
+                            </ul>
+                                    <br>
+                                    <div>
+                                        <b>   Employees Code   </b> <br>
+                                        <ul >
+                                            <li>
+                                            First Last ( XXXX )
+                                            </li>
+                                        </ul>
+                                    </div>
+                         </div>
+                         <div class="col-md-4" >
+                            <ul  *ngFor="let row of Branchs">
+                                <li>
+                                {{ row.brnName}} ({{ row.BranchCode }})
+                                </li>
+                            </ul>
+                         </div>
+                              
+                       
+                                    <!-- <div class="tr col-md-4"  *ngFor="let row of Companies">
+                                        <span class="td col-md-6">
+                                        {{ row.comName}} ({{ row.CompanyCode }})
+                                        </span>
+                                    </div>
+                    
+                                    <div class="tr col-md-4"  *ngFor="let row of Branchs">
+                                        <span class="td col-md-6">
+                                        {{ row.brnName}} ({{ row.BranchCode }})
+                                        </span>
+                                    </div> -->
+                       
+                        </div>
+</div>
+
+
+
+

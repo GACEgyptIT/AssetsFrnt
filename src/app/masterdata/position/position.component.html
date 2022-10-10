@@ -1,0 +1,67 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="positionForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Position ID: {{ getPositionForm.posId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Position Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Position Name" formControlName="posTitle"  class="form-control" >
+                                <small [hidden]="positionForm.controls.posTitle.valid || positionForm.controls.posTitle.pristine" class="text-danger">
+                                      Position Name is required.
+                                </small>
+                              </div>
+                            </div>
+                            <div class="footer">
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" *ngIf="getPositionForm.posId.value == null" [disabled]="positionForm.status == 'INVALID' "> Add </button> <!--  [disabled]="positionForm.status == 'INVALID' " -->
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" *ngIf="getPositionForm.posId.value != null" [disabled]="positionForm.status == 'INVALID' "> Save </button> <!--*ngIf="getPositionForm.posId.value > 0" [disabled]="positionForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+              </form>
+         </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Positions List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Position Name 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Positions">
+                                <td>{{ row?.posId }}</td>
+                                <td>{{ row?.posTitle }}</td>
+                                <td>
+                                  <a (click)="onEditPosition(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeletePosition(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

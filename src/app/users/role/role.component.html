@@ -1,0 +1,110 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Role ID: {{ getRoleForm.roleId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Role Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Role Name" formControlName="roleName"  class="form-control" >
+                                <small [hidden]="roleForm.controls.roleName.valid || roleForm.controls.roleName.pristine" class="text-danger">
+                                      Role Name is required.
+                                </small>
+                              </div>
+                              <div class="form-group col-md-3">
+                                <label>Select Privileges </label>
+                                <ng-multiselect-dropdown #multiSelect
+                                [placeholder]="'Select Privileges'" 
+                                [data]="Privileges" 
+                                [formControl]="getRoleForm.PrivilegeName" 
+                                [settings]="settings"
+                                [disabled]="false"
+                                (onFilterChange)="onFilterChange($event)"
+                                (onDropDownClose)="onDropDownClose($event)"
+                                (onSelect)="onItemSelect($event)" 
+                                (onDeSelect)="onDeSelect($event)"
+                                (onSelectAll)="onSelectAll($event)"
+                                (onDeSelectAll)="onDeSelectAll($event)"
+                                >
+                        
+                                </ng-multiselect-dropdown>
+                              </div>
+                       
+                            </div>
+                            <div class="footer">
+                        
+                                    <!-- <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onSubmit('Add')" [disabled]="roleForm.status == 'INVALID' "> Add </button>   *ngIf="getRoleForm.roleId.value == 0"  -->
+                                    <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onSubmit('Save')" [disabled]="roleForm.status == 'INVALID' "> Save </button> 
+                            </div>
+                        </div>
+          
+                        <!-- <div>
+                          roleForm.value:  {{ roleForm.value | json }}
+                        </div> -->
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <div class="form-group col-md-12">
+                        <div class="form-group col-md-3">
+    
+                          <h4 class="title">Roles List</h4> 
+                        </div>
+                        <div class="form-group col-md-3">
+                          <select  (change)="onSelectRolesTemplate($event)"    class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                            <option value="Templates">Templates</option>
+                            <option value="Roles">Roles</option>
+                          </select>
+                        </div>
+                      </div>
+        
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Role Name 
+                                </th>
+                                <th >
+                                  Privileges 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Roles">
+                                <td>{{ row?.roleId }}</td>
+                                <td>{{ row?.roleName }}</td>
+                                <td> <li *ngFor="let p of row?.Privileges">  {{ p.PrivilegeName }}       </li>   </td>
+                                <td>
+                                  <a (click)="onEditRole(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteRole(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

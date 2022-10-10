@@ -1,0 +1,9 @@
+/* 
+.backgroundGAC{
+    background: red url(../assets/img/GAC_BackGround.jpg) no-repeat fixed center;
+
+    background-image: url(../assets/img/GAC_BackGround.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+} */
+

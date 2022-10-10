@@ -1,0 +1,155 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="ItemsCategoryForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                ItemsCategory ID: {{ getItemsCategoryForm.icId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">ItemsCategory Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="ItemsCategory Name" formControlName="icName"  class="form-control" >
+                                <small [hidden]="ItemsCategoryForm.controls.icName.valid || ItemsCategoryForm.controls.icName.pristine" class="text-danger">
+                                      ItemsCategory Name is required.
+                                </small>
+                              </div>
+                              <!-- <div class="form-group col-md-2">
+                                <label class="control-label" for="">Authorization Level 1: </label><br>
+                                <span [ngStyle]="{'color': !getHD.value ? 'black' : 'green'}" >   <input id="HD" (click)="AddAuth($event)"  formControlName="HD"  class=" form-check-input"  type="checkbox" value="HD"  />  Head Department  </span>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label class="control-label" for="">Authorization Level 2: </label><br>
+                                <span [ngStyle]="{'color': !getOM.value ? 'black' : 'green'}" >   <input id="OM" (click)="AddAuth($event)"  formControlName="OM"  class=" form-check-input"  type="checkbox" value="OM" />  Office Manager  </span>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label class="control-label" for="">Authorization Level 2: </label><br>
+                                <span [ngStyle]="{'color': !getHR.value ? 'black' : 'green'}" >   <input id="HR" (click)="AddAuth($event)"   formControlName="HR"  class=" form-check-input"  type="checkbox" value="HR"  />  Admin  </span>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label class="control-label" for="">Authorization Level 2: </label><br>
+                                <span [ngStyle]="{'color': !getIT.value ? 'black' : 'green'}" >   <input id="IT" (click)="AddAuth($event)"  formControlName="IT"  class=" form-check-input"  type="checkbox"  value="IT"  />  IT  </span>
+                              </div>
+                              <div class="form-group col-md-2">
+                                <label class="control-label" for="">Authorization Level 3: </label> <br>
+                                <span [ngStyle]="{'color': !getGM.value ? 'black' : 'green'}" >   <input id="GM" (click)="AddAuth($event)"  formControlName="GM"  class=" form-check-input"  type="checkbox" value="GM"  />  GM  </span>
+                              </div> -->
+                       
+                            </div>
+                            <div class="footer">
+                        
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" *ngIf="getItemsCategoryForm.icId.value == null" [disabled]="ItemsCategoryForm.status == 'INVALID' "> Add </button> <!--  [disabled]="ItemsCategoryForm.status == 'INVALID' " -->
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" *ngIf="getItemsCategoryForm.icId.value != null" [disabled]="ItemsCategoryForm.status == 'INVALID' "> Save </button> <!--*ngIf="getItemsCategoryForm.icId.value > 0" [disabled]="ItemsCategoryForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+                        <!-- <div>
+                          <table class="table " border="1"  >
+                            <tbody  >
+                                  <tr >
+                                       <td>{{ Authorization[0]}}</td>
+                                       <td>{{ Authorization[1]}}</td>
+                                       <td>{{ Authorization[2]}}</td>
+                                       <td>{{ Authorization[3]}}</td>
+                                       <td>{{ Authorization[4]}}</td>
+                                  </tr>
+                                  <tr >
+                                    <td>{{ Authorization[5]}}</td>
+                                    <td>{{ Authorization[6]}}</td>
+                                    <td>{{ Authorization[7]}}</td>
+                                    <td>{{ Authorization[8]}}</td>
+                                    <td>{{ Authorization[9]}}</td>
+                                  </tr>
+                                  <tr >
+                                    <td>{{ Authorization[10]}}</td>
+                                    <td>{{ Authorization[11]}}</td>
+                                    <td>{{ Authorization[12]}}</td>
+                                    <td>{{ Authorization[13]}}</td>
+                                    <td>{{ Authorization[14]}}</td>
+                                     </tr>
+                                  <tr >
+                                    <td> {{ Authorization[15]}}</td>
+                                    <td>{{ Authorization[16]}}</td>
+                                    <td>{{ Authorization[17]}}</td>
+                                    <td>{{ Authorization[18]}}</td>
+                                    <td>{{ Authorization[19]}}</td>
+                                  </tr>
+                                  <tr >
+                                    <td> {{ Authorization[20]}}</td>
+                                    <td>{{ Authorization[21]}}</td>
+                                    <td>{{ Authorization[22]}}</td>
+                                    <td>{{ Authorization[23]}}</td>
+                                    <td>{{ Authorization[24]}}</td>
+                                  </tr>
+                            </tbody>
+                          </table>
+                        </div> -->
+          
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Categories List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  ItemsCategory Name 
+                                </th>
+                                <th >
+                                  HD 
+                                </th>
+                                <th >
+                                  OM 
+                                </th>
+                                <th >
+                                  HR 
+                                </th>
+                                <th >
+                                  IT 
+                                </th>
+                                <th >
+                                  GM 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody >
+                              <tr  *ngFor="let row of ItemsCategorys; let i = index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ row?.icName }}</td>
+                                <td [ngStyle]="{'color': !row?.HD ? 'black' : 'green'}">{{ row?.HD }}</td>
+                                <td [ngStyle]="{'color': !row?.OM ? 'black' : 'green'}">{{ row?.OM }}</td>
+                                <td [ngStyle]="{'color': !row?.HR ? 'black' : 'green'}">{{ row?.HR }}</td>
+                                <td [ngStyle]="{'color': !row?.IT ? 'black' : 'green'}">{{ row?.IT }}</td>
+                                <td [ngStyle]="{'color': !row?.GM ? 'black' : 'green'}">{{ row?.GM }}</td>
+                                <td>
+                                  <a (click)="onEditItemsCategory(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteItemsCategory(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

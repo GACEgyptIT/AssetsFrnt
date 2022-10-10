@@ -1,0 +1,88 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Category ID: {{ getCategoryForm.AssetCategoryId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Category Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Category Name" formControlName="astCategoryName"  class="form-control" (change)="onIncrementCategoryCode()" >
+                                <small [hidden]="categoryForm.controls.astCategoryName.valid || categoryForm.controls.astCategoryName.pristine" class="text-danger">
+                                      Category Name is required.
+                                </small>
+                              </div>
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Code (first 2 digits out of 8): <span class="star">*</span> </label>
+                                <input type="text" placeholder="10XXXxxx" (keyup)="OnCodeChange($event)" formControlName="astCategoryCode"  class="form-control" disabled >
+                                <small [hidden]="categoryForm.controls.astCategoryCode.valid || categoryForm.controls.astCategoryCode.pristine" class="text-danger">
+                                  Code is required 2 digits.
+                            </small>
+                            <small *ngIf="CodeExist" class="text-danger">
+                              Code is already exist
+                            </small>
+                              </div>
+                       
+                            </div>
+                            <div class="footer">
+                        
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('Add')" *ngIf="getCategoryForm.AssetCategoryId.value == 0" [disabled]="categoryForm.status == 'INVALID' "> Add </button> <!--  [disabled]="categoryForm.status == 'INVALID' " -->
+                                    <button type="submit" class="btn btn-primary pe-7s-diskette" (click)="setStatus('Save')" *ngIf="getCategoryForm.AssetCategoryId.value > 0" [disabled]="categoryForm.status == 'INVALID' "> Save </button> <!--*ngIf="getCategoryForm.AssetCategoryId.value > 0" [disabled]="categoryForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+          
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Categorys List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Category Name 
+                                </th>
+                                <th >
+                                  Code
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Categorys">
+                                <td>{{ row?.AssetCategoryId }}</td>
+                                <td>{{ row?.astCategoryName }}</td>
+                                <td>{{ row?.astCategoryCode }}</td>
+                                <td>
+                                  <a (click)="onEditCategory(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteCategory(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

@@ -1,0 +1,82 @@
+ <div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+        <div class="row"   >
+              <div class="card col-md-12">
+                <form [formGroup]="departmetForm" (ngSubmit)="onSubmit()">
+                <!-- <div class="content"> -->
+          
+                        <div class="form-group col-md-12">
+                              <legend>         
+                                Supplier ID: {{ getSupplierForm.dptId.value }}
+                              </legend>
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                <label class="control-label" for="">Supplier Name: <span class="star">*</span> </label>
+                                <input type="text" placeholder="Supplier Name" formControlName="dptName"  class="form-control" >
+                                <small [hidden]="departmetForm.controls.dptName.valid || departmetForm.controls.dptName.pristine" class="text-danger">
+                                      Supplier Name is required.
+                                </small>
+                              </div>                      
+                            </div>
+                            <div class="row">
+
+                              <div class="col-md-4">
+                                <input class="form-control col-md-6" type="file" #fileInput />
+                              </div>
+                              <div class="col-md-2">
+                                <button class="btn btn-primary" (click)="uploadFile()">Upload</button>
+                              </div>
+                            </div>
+                            <div class="footer">
+
+                                    <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onSubmit('Add')" *ngIf="getSupplierForm.dptId.value == 0" [disabled]="departmetForm.status == 'INVALID' "> Add </button> <!--  [disabled]="departmetForm.status == 'INVALID' " -->
+                                    <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onSubmit('Save')" *ngIf="getSupplierForm.dptId.value > 0" [disabled]="departmetForm.status == 'INVALID' "> Save </button> <!--*ngIf="getSupplierForm.dptId.value > 0" [disabled]="departmetForm.status == 'INVALID' "-->
+                                    <button type="button" (click)="onCancel()" class="btn btn-primary pull-right" > Cancel </button>
+                            </div>
+                        </div>
+          
+                <!-- </div> -->
+              </form>
+        
+              </div>
+        </div>
+        <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">companys List</h4>
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <!-- Table Headers -->
+                        <thead>
+                              <tr>
+                                <th >
+                                  ID 
+                                </th>
+                                <th >
+                                  Supplier Name 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <!-- Table Body -->
+                        <tbody  >
+                              <tr  *ngFor="let row of Suppliers">
+                                <td>{{ row?.dptId }}</td>
+                                <td>{{ row?.dptName }}</td>
+                                <td>
+                                  <a (click)="onEditSupplier(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeleteSupplier(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="main-content">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    <ngx-alerts></ngx-alerts>
+      <div class="container-fluid">
+   <div class="row" >
+             <div class="card">
+                    <div class="content">
+                      <h4 class="title">Privileges List</h4> 
+                      <form [formGroup]="privilegeForm" (ngSubmit)="onSubmit()">
+                      <button type="button" class="btn btn-primary pe-7s-diskette" (click)="onDBUpdate()"  > DB Update </button> <span style="color: red;">         Privileges are Hard Coded  </span> 
+                       </form>          
+                    </div>
+                      <div class="fresh-datatables">
+                        <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <thead>
+                              <tr>
+                                <th >
+                                 #
+                                </th>
+                                <th >
+                                  Page Name
+                                </th>
+                                <th >
+                                  Privilege Path 
+                                </th>
+                                <th >
+                                  Actions 
+                                </th>
+                              </tr>
+                        </thead>
+                        <tbody  >
+                              <tr  *ngFor="let row of PrivilegesDB; let i = index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ row?.Page }}</td>
+                                <td>{{ row?.PrivilegeName }}</td>
+                                <td>
+                                  <a (click)="onEditPrivilege(row)" class="btn btn-simple btn-warning btn-icon edit"><i class="fa fa-edit"></i></a>
+                                  <a (click)="onDeletePrivilege(row)" class="btn btn-simple btn-danger btn-icon remove "><i class="fa fa-times"></i></a> </td>
+                              </tr>
+                        </tbody>
+                        </table>
+                      </div>
+              </div>
+ 
+        </div>
+      </div>
+</div>
+

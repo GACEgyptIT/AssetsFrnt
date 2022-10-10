@@ -1,0 +1,146 @@
+<div class="main-content">
+    <ngx-alerts></ngx-alerts>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+      <div class="container-fluid" >
+
+            <div class="row card col-md-12"  >
+                <a routerLink="/operation/invoicemng" routerLinkActive="active" class="pull-left">Back to Invoices Management</a> 
+                <div class="content">
+                  <div class="row card col-md-12" style="background-color:  #f9f9f9;" >
+                    <br>
+                    <div class="col-md-12">
+                      <div class=" row ">
+                        <form novalidate [formGroup]="filterByMonthForm"> 
+                          
+                        <div class="col-md-2">
+
+                              <select formControlName="ItemsCategoryName1"    [ngStyle]="{'background-color': filterByMonthForm.controls.ItemsCategoryName1.value ? 'gray' : 'white'}"
+                              (change)="onFilterChange(filterByMonthForm.value, 'forMonths')" 
+                              class="form-control" data-title="Single Select" placeholder="Categories"
+                              data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="" >Cat - 1</option>
+                              <option *ngFor="let a of ItemsCategorys" value={{a.icName}} > {{a.icName}} </option>
+                              </select>
+                        </div>
+                        <div class="col-md-2">
+
+                              <select formControlName="ItemsCategoryName2"   [ngStyle]="{'background-color': filterByMonthForm.controls.ItemsCategoryName2.value ? 'gray' : 'white'}"
+                               (change)="onFilterChange(filterByMonthForm.value, 'forMonths')" 
+                              class="form-control" data-title="Single Select" placeholder="Categories"
+                              data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="" >Cat - 2</option>
+                              <option *ngFor="let a of ItemsCategorys" value={{a.icName}} > {{a.icName}} </option>
+                              </select>
+
+                        </div>
+                        <div class="col-md-2">
+
+                              <select formControlName="ItemsCategoryName3"  [ngStyle]="{'background-color': filterByMonthForm.controls.ItemsCategoryName3.value ? 'gray' : 'white'}"
+                               (change)="onFilterChange(filterByMonthForm.value, 'forMonths')" 
+                              class="form-control" data-title="Single Select" placeholder="Categories"
+                              data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                              <option value="" >Cat - 3</option>
+                              <option *ngFor="let a of ItemsCategorys" value={{a.icName}} > {{a.icName}} </option>
+                              </select>
+                        </div>
+                        <div class="col-md-2">
+                          <select formControlName="ItemsCategoryName4"   [ngStyle]="{'background-color': filterByMonthForm.controls.ItemsCategoryName4.value ? 'gray' : 'white'}"
+                          (change)="onFilterChange(filterByMonthForm.value, 'forMonths' )" 
+                          class="form-control" data-title="Single Select" placeholder="Categories"
+                          data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                          <option value="" >Cat - 4</option>
+                          <option *ngFor="let a of ItemsCategorys" value={{a.icName}} > {{a.icName}} </option>
+                          </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select value="2021"  (change)="onYearChange($event)" 
+                      class="form-control" data-title="Single Select" placeholder="2021"
+                      data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                      <option value="2021" >2021</option>
+                      <option value="2020" >2020</option>
+                      </select>
+                </div>
+                        <div>
+                          <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllInvoices()" ></i>
+                        </div>
+                      </form>
+                      </div>
+                      <div class="row ">
+                          <br>
+                          <lbd-chartMonth
+                          [title]="'Monthly Purchasing'"
+                          [subtitle]="'All invoices including Taxes'"
+                          [chartTypeMonth]="activityChartTypeMonth"
+                          [chartDataForMonths]="activityChartDataForMonths"
+                          [chartOptions]="activityChartOptions"
+                          [chartResponsive]="activityChartResponsive"
+                          [legendItemsMonths]="activityChartLegendItemsMonth"
+                          [withHr]="true"
+                          [footerIconClass]="'fa fa-check'"
+                          [footerText]="'Data information certified'">
+                          </lbd-chartMonth>
+
+                      </div>
+
+                    </div>
+                     
+                  </div>
+                  <div class="row card col-md-12" style="background-color:  #f9f9f9;" >
+                    <br>
+                    <div class="col-md-6">
+                      <div class=" row ">
+                       <title> Monthly Table </title> 
+                      </div>
+                      <div class="row ">
+                        <div id="print-section" >
+                          <div class="fresh-datatables"  >
+                            <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">                     
+                            <thead>
+                                  <tr>
+                                    <th style="color: green;">Categories</th>
+                                    <th> Jan </th>
+                                    <th> Feb </th>
+                                    <th> March </th>
+                                    <th> April </th>
+                                    <th> May </th>
+                                    <th> June </th>
+                                    <th> July </th>
+                                    <th> Aug </th>
+                                    <th> Sep </th>
+                                    <th> Oct </th>
+                                    <th> Nov </th>
+                                    <th> Dec </th>
+                                    <th style="color: green;">Total</th>              
+                                  </tr>
+                            </thead>
+                            <tbody>
+                                  <tr *ngFor="let row of activityChartDataForMonths.series">
+                                    <td style="color: green;">{{ row[12] }}</td>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[4] }}</td> 
+                                    <td>{{ row[5] }}</td>
+                                    <td>{{ row[6] }}</td>
+                                    <td>{{ row[7] }}</td>
+                                    <td>{{ row[8] }}</td>
+                                    <td>{{ row[9] }}</td>
+                                    <td>{{ row[10] }}</td>
+                                    <td>{{ row[11] }}</td> 
+                                    <td style="color: green;">{{ row[13] }}</td>                       
+                                  </tr>                      
+                            </tbody>
+                            </table>
+                          </div>
+                         </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+                </div>
+            </div>
+ 
+  
+      </div>
+  </div>

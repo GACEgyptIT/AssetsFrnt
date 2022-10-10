@@ -1,0 +1,47 @@
+
+.toolbarIcon{
+    font-size: 25px;
+    color: black;
+    padding-top: 13px;
+    padding-bottom: 7px;
+    padding-right: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+    /* box-shadow: 1px 2px grey; */
+}
+.toolbarIcon:hover {
+    margin-top: 6px;
+    font-size: 28px;
+    color: blue;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-right: 11px;
+    padding-left: 11px;
+    cursor: pointer;
+    border: 1px solid #f9f9f900;
+    background-color: white;
+}
+
+
+.marginsDropdownList{
+    margin-top: 8px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.marginsPaging{
+    margin-top: 8px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.marginsSearch{
+    /* margin-right: 10px; */
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.toolbarCard{
+    box-shadow: 1px 1px 1px 1px grey; 
+    /* margin: auto; */
+    /* height: 40px; */
+    background-color: #f9f9f9;
+    border: 1px solid rgb(212, 212, 212);
+}

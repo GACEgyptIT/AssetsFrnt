@@ -1,0 +1,223 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <ngx-alerts></ngx-alerts>
+    <div class="content" >
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+    
+          <!-- Statistics -->
+          <div class="card row col-md-12" >
+            <legend>      <h5 class="title"> Accounts Statistics</h5>  </legend>
+            <div class="col-md-12">
+                <div class="col-md-2">           
+                  Total Employees:  <span style="color: black;">  {{totalEmplyees}} </span>
+                </div>
+                <div class="col-md-2">
+                  Employees:  <span style="color: black;">  {{ActiveEmployeesNoHrCode}} </span>
+              
+                </div>
+                <div class="col-md-2">
+                  No-HrCode:  <span style="color: red;">  {{noHrCode}} </span>
+             
+                </div>
+                <div class="col-md-2">
+                  Archive Accounts:  <span style="color: black;"> {{ArchiveAccounts}} </span>
+            
+                </div>
+                <div class="col-md-2">
+                  Service Accounts:  <span style="color: black;">  {{ServiceAccounts}} </span>
+
+                </div>
+                <div class="col-md-2">
+                  Total Imported Accounts: <span>  {{totalImportedEmplyees}} </span>
+            
+                </div>
+            </div> 
+            <div class="col-md-12">
+              <div class="col-md-2">
+              Selected:  <span style="color: black;">  {{selectedEmployess}} </span>
+              </div>
+              <div class="col-md-2">
+                New Employees :  <span style="color: green;">  {{newEmplyees}} </span>
+
+              </div>
+                <div class="col-md-2">
+                  Emps Already Exist: <span  style="color: red;">  {{aleadyExistEmplyees}} </span>
+           
+
+                </div>
+              <div class="col-md-2">
+          
+            
+              </div>
+              <div class="col-md-2">
+               InActive Accounts:  <span style="color: black;">  {{InActiveAccounts}} </span>
+         
+              </div>
+              <div class="col-md-2">
+                Active Accounts:  <span style="color: green;">  {{ActiveAccounts}} </span>
+             
+              </div>
+            </div> 
+            <br>
+              <a  routerLink="/masterdata/employee" routerLinkActive="active">Back to Employee List</a> <br> 
+              <a  routerLink="/masterdata/showadaccounts" routerLinkActive="active">Show AD Accounts</a>
+          </div>
+    
+          <!-- Imported List -->
+          <div class="row card col-md-12" >
+            <div class="content">
+                  <br>
+                  <!-- Toolbar -->
+                  <div class="row card col-md-12 toolbarCard" >
+                      <div class=" col-md-3" >
+                        <i class="pe-7s-users toolbarIcon" (click)="ImportADEmployees()" ></i>    
+                        <i class="pe-7s-diskette toolbarIcon" (click)="onSaveToEmployeeList()"  ></i>    
+                        <i class="pe-7s-refresh-2 toolbarIcon" (click)="onGetAllImportedEmployees()" ></i> 
+                        <i class="pe-7s-cloud-download toolbarIcon"  (click)="onExportExcel()"></i>
+                        <i class="pe-7s-trash toolbarIcon" (click)="onDeleteAllSellected()" ></i>  
+                        <i class="pe-7s-print toolbarIcon"  printTitle="MyTitle" printSectionId="print-section" ngxPrint></i>
+                    
+                      </div>
+                      <div class=" col-md-2">
+                        <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                          <option value="5">Rows</option>
+                          <option value="5">5</option>
+                          <option value="10">10</option>
+                          <option value="25">25</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                  
+                          </select> 
+                      </div>
+                      <div class=" col-md-3 marginsPaging" >
+                        <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                      </div>
+                      <div class="col-md-2">
+                        <select 
+                          (change)="onFilterByNoHrCode($event)" class="form-control" data-title="Single Select" value="0"
+                          data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                  <option value="ShowAll"> Show All </option>
+                                  <option value="No-HrCode"> No-HrCode </option>
+                                  <option value="EmployeesAccs"> Employees Accs </option>
+                                  <option value="ServiceAccounts"> Service Accounts </option>
+                                  <option value="ArchiveAccounts"> Archive Accounts </option>
+                                  <option value="ActiveEmpsNoCode"> Active Emps NoCode </option>
+                                  <option value="NewEmps"> New Emps ??</option>
+                                  <option value="AlreadyExist"> Already Exist  ??</option>
+                        </select>
+                      </div>
+                      <div class=" col-md-1 marginsSearch ">
+                        <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                    
+                      </div>
+                  </div>
+                  <br><br>
+                  <div id="print-section" class="row card col-md-12 " style="overflow-x:auto;"  >
+                      <div class="content">
+                          <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%" >
+                            <thead>
+                              <tr>
+                                <th> 
+                                  <div class=" form-check">
+                                    <label class=" form-check-label">
+                                      <input id="impEmpAllCheckBox--" (change)="onSelectAll()" class=" form-check-input"  type="checkbox" value="" />
+                                      <span class=" form-check-sign">
+                                        <span class=" check"> </span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </th>
+                                <th>
+                                  #
+                                </th>
+                                <th>
+                                  Type
+                                </th>
+                                <th [class.active]="order === 'IsExist'" (click)="setOrder('IsExist')">
+                                  Is Exist <span [hidden]="reverse">▼</span> <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'hrCode'" (click)="setOrder('hrCode')">
+                                  Hr Code <span [hidden]="reverse">▼</span> <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'accountName'" (click)="setOrder('accountName')">
+                                  Account Name <span [hidden]="reverse">▼</span> <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'firstName'" (click)="setOrder('firstName')">
+                                  First Name <span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'lastName'" (click)="setOrder('lastName')">
+                                  Last Name <span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'displayName'" (click)="setOrder('displayName')">
+                                  Display Name<span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'email'" (click)="setOrder('email')">
+                                  Email <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th >
+                                  Acc Enabled
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody *ngIf="Employees.length == 0" ><tr [ngStyle]="{'color': 'red'}" style="text-align:center;"> No Enties Found </tr></tbody>
+                            <tbody *ngIf="Employees.length > 0" >
+                              <tr *ngFor="let row of Employees | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index" >
+                                <td>
+                                  <div class="form-check">
+                                    <label class=" form-check-label">
+                                      <input id="assetItem--{{i}}" class=" form-check-input" (change)="onSelect($event, row, i)" 
+                                      [(ngModel)]="row.checkbox" [value]="row.checkbox" type="checkbox" value="" />
+                                      <span class=" form-check-sign">
+                                        <span class=" check"> </span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </td>
+                                <td>
+                                  {{ i+1 }}
+                                </td>
+                                <td>
+                                  {{ row.accountType }}
+                                </td>
+                                <td *ngIf="row.IsExist == true"  [ngStyle]="{'color': row.IsExist? 'red' : 'red'}">{{ row.IsExist }}</td>
+                                <td *ngIf="row.IsExist == false"  [ngStyle]="{'color': row.IsExist? 'green' : 'green'}">{{ row.IsExist }}</td>
+                                <td  [ngStyle]="{'color': row?.hrCode? 'black' : 'red'}">{{ row?.hrCode ? row?.hrCode : 'missed' }}</td> 
+                                <td [style.color] = "row.IsExist == true ? 'red' : 'green'">{{ row?.accountName }}</td>
+                                <td>{{ row?.firstName }}</td>
+                                <td>{{ row?.lastName }}</td>
+                                <td>{{ row?.displayName }}</td>
+                                <td>{{ row?.email }}</td>
+                                <td> {{ row.enabled }} </td> 
+                              </tr>
+                          
+                            </tbody>
+                            
+                          </table>
+                      </div>  
+                  </div>
+                  <div class="row col-md-12">
+                    <div class="col-md-1">
+                      <select class="col-md-1" id="PerPage" (change)="onChangeRowsPerPage($event)" class="form-control col-sm-1" >
+                        <option value="5">#Rows</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                   
+                      </select> 
+                    </div>
+                    <div class="col-md-6">
+                      <pagination-controls (pageChange)="p = $event">    </pagination-controls>
+                    </div>
+                  
+                  </div>
+
+            </div>
+          </div>
+    </div>
+ </div>
+</div>

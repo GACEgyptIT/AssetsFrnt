@@ -1,0 +1,174 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <!-- <ngx-alerts></ngx-alerts> -->
+      <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading> -->
+      <div class="content" >
+        <div class="row card col-md-12">
+            <div class="content">
+                    <div class="row col-md-12"  >
+                      <h4 class="title">Stock-On-Hand (SOH)</h4>  
+                    </div>
+                             <form novalidate [formGroup]="searchForm"> 
+                              <div class="card col-md-12 toolbarCard" >
+                                <div class=" col-md-12">
+                                  <div class=" col-md-4" >
+                                    <i class="pe-7s-cloud-download toolbarIcon" (click)="onExportExcel()" ></i>
+                                    <i class="pe-7s-print toolbarIcon"  printTitle="Assets-List" printSectionId="print-section" ngxPrint> </i>
+                                    <i class="pe-7s-refresh-2 toolbarIcon" (click)="Refresh()" ></i>   
+                                  </div>
+                                  <div class=" col-md-2">
+                                    <select id="PerPage" (change)="onChangeRowsPerPage($event)" class="marginsDropdownList form-control" value="5">
+                                      <option value="5">Rows</option>
+                                      <option value="5">5</option>
+                                      <option value="10">10</option>
+                                      <option value="25">25</option>
+                                      <option value="50">50</option>
+                                      <option value="100">100</option>
+            
+                                      </select> 
+                                  </div>
+                                  <div class=" col-md-6 marginsPaging" >
+                                    <pagination-controls  (pageChange)="pageIndex = $event" > </pagination-controls>
+                                  </div>
+                                    <br><br>     <br>
+                                
+                                </div>
+                                <div class=" col-md-12">
+                                  <div class="col-md-2">
+                                    <select value="0" formControlName="itmId" 
+                                    [ngStyle]="{'background-color': ItemNameIsSelected ? 'gray' : 'white'}" (change)="checkItemFilterSelection($event.target.value)"
+                                      class="form-control" data-title="Single Select" data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                      <option value="">All-Items</option>
+                                      <option *ngFor="let itm of Items" value={{itm.itmId}} > {{itm.itmName}} </option>
+                                    </select>
+                                  </div>
+                                  <div class=" col-md-2">
+                                    <select formControlName="strId" 
+                                    [ngStyle]="{'background-color': StoreNameIsSelected ? 'gray' : 'white'}" (change)="checkStoreFilterSelection($event.target.value)" 
+                                    class="form-control" data-title="Single Select" placeholder="Stores"
+                                    data-style="btn-default btn-block" data-menu-style="dropdown-blue">
+                                    <option value="" >All-Stores</option>
+                                    <option *ngFor="let a of Stores" value={{a.StoreId}} > {{a.strName}} </option>
+                                  </select>
+                                  </div>
+
+                                  <div class="col-md-2">
+                                      <button type="button" class="btn btn-primary pe-7s-search"  (click)="searchFilter(searchForm.value)"> Search </button> 
+                                  </div>
+                                  <div class=" col-md-2 marginsSearch ">
+                                    <input #search id="search" type="text" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" class="form-control" >       
+                                  </div>
+                              <br><br><br>
+                                </div>
+                              </div>
+                            </form>
+  
+                            <legend *ngIf="SOH?.StoreVMs != null">
+                              Item: <span style="color: green; font-style:italic;"> {{ SOH.ItemName }} </span> 
+                            </legend>
+                            <legend *ngIf="SOH?.ItemVMs != null">
+                              Store:  <span style="color: green; font-style:italic;">  {{ SOH.StoreName }} </span> 
+                            </legend>
+
+                      <!-- By Item -->
+                      <table *ngIf="SOH?.StoreVMs != null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <thead>
+                              <tr>
+                                <th >
+                                  # 
+                                </th>
+                                <th [class.active]="order === 'astDescription'" (click)="setOrder('astDescription')"
+                                  class="mdl-data-table__cell--non-numeric">
+                                  Store <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                                  Qnt <span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                              </tr>
+                        </thead>
+                        <tbody >
+                              <tr  *ngFor="let row of SOH.StoreVMs | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ row?.strName }}</td>
+                                <td>{{ row?.ItemQnt }}</td>
+                                <td>
+                              </tr> 
+                              <!-- <tr  *ngIf="SOH?.StoreVMs == null && SOH?.itmId != null">
+                                <td >
+                                      <div  class="text-center" style="color: red; width: auto">
+                                        <p >
+                                            No Stores found
+                                        </p>
+                                      </div>
+                                </td>
+                              </tr> -->
+                        </tbody>
+                      </table>
+                      
+                      <!-- By Store -->
+                      <table *ngIf="SOH?.ItemVMs != null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <thead>
+                              <tr>
+                                <th >
+                                  # 
+                                </th>
+                                <th [class.active]="order === 'astDescription'" (click)="setOrder('astDescription')"
+                                  class="mdl-data-table__cell--non-numeric">
+                                  Item <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                                  Qnt <span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th [class.active]="order === 'astCode'" (click)="setOrder('astCode')">
+                                  Value <span [hidden]="reverse">▼</span>
+                                  <span [hidden]="!reverse">▲</span>
+                                </th>
+                              </tr>
+                        </thead>
+                        <tbody >
+                              <tr  *ngFor="let row of SOH.ItemVMs | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: pageSize, currentPage: pageIndex }; let i = index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ row?.itmName }}</td>
+                                <td>{{ row?.ItmQnt }}</td> 
+                                <td>{{ row?.ItmCost }}</td>
+                                <td>
+                              </tr> 
+                              <!-- <tr  *ngIf="SOH?.ItemVMs == null && SOH?.strId != null">
+                                <td >
+                                      <div  class="text-center" style="color: red; width: auto">
+                                        <p >
+                                            No Items found
+                                        </p>
+                                      </div>
+                                </td>
+                              </tr> -->
+                        </tbody>
+                      </table>
+
+                      <!-- No Records -->
+                      <table *ngIf="SOH?.ItemVMs == null && getStoreId != null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <thead>
+                                                  <tr  style="color: red;">
+                                                    <th >
+                                                     No Items Found 1
+                                                    </th>
+                                                  </tr>
+                                            </thead>
+                      </table>
+                      <!-- <table *ngIf="SOH?.StoreVMs == null && getItemId != null" id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                        <thead>
+                              <tr>
+                                <th style="color: red;" >
+                                 No Stores Found 2
+                                </th>
+                              </tr>
+                        </thead>
+                      </table> -->
+                   </div> 
+            </div>
+
+      </div>
+    </div>
+  </div>
